@@ -83,3 +83,29 @@ body[data-page="services"] .info-card { min-height:300px; }
   body[data-page="work"] .project-visual {height:300px}
   body[data-page="work"] .project-card:nth-child(2),body[data-page="work"] .project-card:nth-child(3) {margin-top:0}
 }
+
+/* =================================
+   TATVA WEBS — BRAND TAGLINE
+   ================================= */
+
+.hero-tagline {
+  color: #ff8a24;
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  line-height: 1.5;
+  margin: 22px 0 12px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Mobile responsiveness */
+
+@media (max-width: 600px) {
+  .hero-tagline {
+    font-size: 18px;
+    margin-top: 18px;
+    margin-bottom: 10px;
+  }
+}
+
