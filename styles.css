@@ -108,4 +108,32 @@ body[data-page="services"] .info-card { min-height:300px; }
     margin-bottom: 10px;
   }
 }
+/* FORCE HIDE NORMAL CURSOR */
+@media (hover: hover) and (pointer: fine) {
+  html,
+  body,
+  body * {
+    cursor: none !important;
+  }
 
+  input,
+  textarea,
+  select,
+  [contenteditable="true"] {
+    cursor: auto !important;
+  }
+
+  .cursor-dot,
+  .cursor-ring {
+    display: block !important;
+    pointer-events: none !important;
+  }
+}
+
+/* Hide custom cursor on touchscreens */
+@media (hover: none), (pointer: coarse) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none !important;
+  }
+}
