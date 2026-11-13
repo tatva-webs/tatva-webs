@@ -564,3 +564,85 @@ body[data-page="services"] .info-card { min-height:300px; }
   }
 }
 
+/* ========================================
+   TATVA WEBS — INTERACTIVE PORTFOLIO
+======================================== */
+
+body[data-page="work"] .portfolio-grid
+  :is(.mock-store, .mock-studio, .mock-north) {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transform: translateZ(0);
+  transition:
+    transform 650ms cubic-bezier(.2, .75, .25, 1),
+    box-shadow 650ms ease,
+    filter 650ms ease;
+  will-change: transform;
+}
+
+/* Subtle premium light sweep */
+body[data-page="work"] .portfolio-grid
+  :is(.mock-store, .mock-studio, .mock-north)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 25%,
+    rgba(255, 255, 255, 0.09) 48%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  transition:
+    opacity 400ms ease,
+    transform 900ms cubic-bezier(.2, .7, .2, 1);
+}
+
+/* Hover interaction */
+@media (hover: hover) and (pointer: fine) {
+  body[data-page="work"] .portfolio-grid
+    :is(.mock-store, .mock-studio, .mock-north):hover {
+    transform: translateY(-7px) scale(1.012);
+    box-shadow:
+      0 24px 65px rgba(0, 0, 0, 0.45),
+      0 0 35px rgba(255, 112, 35, 0.09);
+    filter: saturate(1.08);
+  }
+
+  body[data-page="work"] .portfolio-grid
+    :is(.mock-store, .mock-studio, .mock-north):hover::after {
+    opacity: 1;
+    transform: translateX(100%);
+  }
+}
+
+/* Keyboard accessibility */
+body[data-page="work"] .portfolio-grid
+  > *:focus-within
+  :is(.mock-store, .mock-studio, .mock-north) {
+  outline: 1px solid rgba(255, 130, 55, 0.65);
+  outline-offset: 4px;
+}
+
+/* Keep touch devices clean */
+@media (hover: none) {
+  body[data-page="work"] .portfolio-grid
+    :is(.mock-store, .mock-studio, .mock-north) {
+    transform: none;
+    filter: none;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  body[data-page="work"] .portfolio-grid
+    :is(.mock-store, .mock-studio, .mock-north) {
+    transition: none;
+    transform: none;
+  }
+}
+
