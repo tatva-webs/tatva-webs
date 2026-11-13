@@ -1,38 +1,43 @@
+
 /* =========================================
    TATVA WEBS — CINEMATIC INTERACTIONS
+   Original logo: tatva-webs-logo.png
 ========================================= */
 
 const TATVA_CONFIG = {
   email: "hello@tatvawebs.com",
   whatsapp: "",
   instagram: "",
-  linkedin: ""
+  linkedin: "",
+  logo: "tatva-webs-logo.png"
 };
 
 document.addEventListener("DOMContentLoaded", () => {
   const body = document.body;
   const page = body.dataset.page || "home";
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
   const finePointer = window.matchMedia("(pointer: fine)").matches;
 
   /* =====================================
-     FAVICON — GENERATED INLINE
+     ORIGINAL LOGO — FAVICON
   ===================================== */
+
+  const oldFavicons = document.querySelectorAll(
+    'link[rel="icon"], link[rel="shortcut icon"]'
+  );
+
+  oldFavicons.forEach((icon) => icon.remove());
 
   const favicon = document.createElement("link");
   favicon.rel = "icon";
-  favicon.type = "image/svg+xml";
-  favicon.href = "data:image/svg+xml," + encodeURIComponent(`
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-      <rect width="64" height="64" rx="15" fill="#080808"/>
-      <path d="M15 17h34v8H36v23h-8V25H15z" fill="#ff6a00"/>
-      <circle cx="47" cy="46" r="5" fill="#ffad42"/>
-    </svg>
-  `);
+  favicon.type = "image/png";
+  favicon.href = TATVA_CONFIG.logo;
   document.head.appendChild(favicon);
 
   /* =====================================
-     PRELOADER
+     ORIGINAL LOGO — PRELOADER
   ===================================== */
 
   let preloader = document.querySelector(".site-preloader");
@@ -40,47 +45,56 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!preloader) {
     preloader = document.createElement("div");
     preloader.className = "site-preloader";
+
     preloader.innerHTML = `
       <div class="preloader-inner">
-        <div class="preloader-logo-mark">T</div>
-        <div class="preloader-wordmark">TATVA <span>WEBS</span></div>
-        <div class="preloader-track"><span class="preloader-progress"></span></div>
-        <div class="preloader-caption">Crafting digital experiences</div>
+        <img
+          class="preloader-logo"
+          src="${TATVA_CONFIG.logo}"
+          alt="Tatva Webs"
+        >
+
+        <div class="preloader-wordmark">
+          TATVA <span>WEBS</span>
+        </div>
+
+        <div class="preloader-track">
+          <span class="preloader-progress"></span>
+        </div>
+
+        <div class="preloader-caption">
+          Crafting digital experiences
+        </div>
       </div>
     `;
+
     body.prepend(preloader);
   }
 
-  const existingLogo = document.querySelector(".brand img, .footer-brand img");
-
-  if (existingLogo) {
-    const logoSrc = existingLogo.currentSrc || existingLogo.src;
-    const logoMark = preloader.querySelector(".preloader-logo-mark");
-
-    if (logoMark && logoSrc) {
-      const image = document.createElement("img");
-      image.className = "preloader-logo";
-      image.src = logoSrc;
-      image.alt = "Tatva Webs";
-      logoMark.replaceWith(image);
-    }
-  }
-
   const hidePreloader = () => {
-    if (!preloader || preloader.classList.contains("is-hidden")) return;
+    if (!preloader || preloader.classList.contains("is-hidden")) {
+      return;
+    }
 
     preloader.classList.add("is-hidden");
 
     window.setTimeout(() => {
-      preloader.remove();
+      preloader?.remove();
     }, 1000);
   };
 
-  window.addEventListener("load", () => {
-    window.setTimeout(hidePreloader, reduceMotion ? 0 : 650);
-  }, { once: true });
+  window.addEventListener(
+    "load",
+    () => {
+      window.setTimeout(
+        hidePreloader,
+        reduceMotion ? 0 : 650
+      );
+    },
+    { once: true }
+  );
 
-  // Safety fallback if an asset takes too long to load.
+  // Safety fallback: never leave the screen covered.
   window.setTimeout(hidePreloader, 4500);
 
   /* =====================================
@@ -101,7 +115,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (
       target === page ||
-      (page === "home" && (href === "/" || href.includes("index")))
+      (page === "home" && (
+        href === "/" || href.includes("index")
+      ))
     ) {
       link.classList.add("active");
       link.setAttribute("aria-current", "page");
@@ -109,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* =====================================
-     MOBILE MENU
+     MOBILE NAVIGATION
   ===================================== */
 
   const menuToggle = document.querySelector(".menu-toggle");
@@ -130,7 +146,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const isOpen = mainNav.classList.toggle("open");
 
       menuToggle.classList.toggle("active", isOpen);
-      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      menuToggle.setAttribute(
+        "aria-expanded",
+        String(isOpen)
+      );
     });
 
     mainNav.querySelectorAll("a").forEach((link) => {
@@ -138,7 +157,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.addEventListener("click", (event) => {
-      if (!mainNav.contains(event.target) && !menuToggle.contains(event.target)) {
+      if (
+        !mainNav.contains(event.target) &&
+        !menuToggle.contains(event.target)
+      ) {
         closeMenu();
       }
     });
@@ -160,86 +182,118 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const updateScrollEffects = () => {
     const scrollTop = window.scrollY;
-    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = scrollable > 0 ? scrollTop / scrollable : 0;
+    const scrollable =
+      document.documentElement.scrollHeight -
+      window.innerHeight;
 
-    body.style.setProperty("--scroll-progress", progress);
-    document.querySelector(".site-header")?.classList.toggle("scrolled", scrollTop > 35);
+    const progress = scrollable > 0
+      ? scrollTop / scrollable
+      : 0;
+
+    body.style.setProperty(
+      "--scroll-progress",
+      progress
+    );
+
+    document
+      .querySelector(".site-header")
+      ?.classList.toggle("scrolled", scrollTop > 35);
 
     scrollTicking = false;
   };
 
-  window.addEventListener("scroll", () => {
-    if (!scrollTicking) {
-      window.requestAnimationFrame(updateScrollEffects);
-      scrollTicking = true;
-    }
-  }, { passive: true });
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (!scrollTicking) {
+        requestAnimationFrame(updateScrollEffects);
+        scrollTicking = true;
+      }
+    },
+    { passive: true }
+  );
 
   updateScrollEffects();
 
   /* =====================================
-     REVEAL ANIMATIONS + STAGGER
+     SCROLL REVEAL + STAGGER
   ===================================== */
 
   const revealElements = document.querySelectorAll(
     ".reveal, .reveal-left, .reveal-right, .reveal-scale"
   );
 
-  revealElements.forEach((element, index) => {
-    if (element.closest(".hero-content")) {
-      element.classList.add("is-visible");
-      return;
-    }
-
+  revealElements.forEach((element) => {
     const parent = element.parentElement;
+
     const siblings = parent
       ? Array.from(parent.children).filter((child) =>
-          child.matches(".reveal, .reveal-left, .reveal-right, .reveal-scale")
+          child.matches(
+            ".reveal, .reveal-left, .reveal-right, .reveal-scale"
+          )
         )
       : [];
 
-    const siblingIndex = Math.max(0, siblings.indexOf(element));
-    element.style.setProperty("--reveal-delay", `${Math.min(siblingIndex * 100, 450)}ms`);
+    const siblingIndex = Math.max(
+      0,
+      siblings.indexOf(element)
+    );
+
+    element.style.setProperty(
+      "--reveal-delay",
+      `${Math.min(siblingIndex * 100, 450)}ms`
+    );
   });
 
-  if (reduceMotion || !("IntersectionObserver" in window)) {
-    revealElements.forEach((element) => element.classList.add("is-visible"));
-  } else {
-    const revealObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
-      });
-    }, {
-      threshold: 0.12,
-      rootMargin: "0px 0px -45px 0px"
+  if (
+    reduceMotion ||
+    !("IntersectionObserver" in window)
+  ) {
+    revealElements.forEach((element) => {
+      element.classList.add("is-visible");
     });
+  } else {
+    const revealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -45px 0px"
+      }
+    );
 
     revealElements.forEach((element) => {
-      if (!element.classList.contains("is-visible")) {
-        revealObserver.observe(element);
-      }
+      revealObserver.observe(element);
     });
   }
 
   /* =====================================
-     CUSTOM CURSOR — DOT + RING LOCKED
+     ADVANCED CUSTOM CURSOR
+     Dot and ring use the SAME coordinates.
   ===================================== */
 
   const cursorDot = document.querySelector(".cursor-dot");
   const cursorRing = document.querySelector(".cursor-ring");
 
-  if (finePointer && !reduceMotion && cursorDot && cursorRing) {
+  if (
+    finePointer &&
+    !reduceMotion &&
+    cursorDot &&
+    cursorRing
+  ) {
     body.classList.add("custom-cursor");
 
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
+
     let ringX = mouseX;
     let ringY = mouseY;
-    let cursorVisible = false;
 
     const setCursorPosition = (element, x, y) => {
       element.style.transform =
@@ -247,31 +301,38 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const showCursor = () => {
-      cursorVisible = true;
       cursorDot.style.opacity = "1";
       cursorRing.style.opacity = "1";
     };
 
     const hideCursor = () => {
-      cursorVisible = false;
       cursorDot.style.opacity = "0";
       cursorRing.style.opacity = "0";
     };
 
-    document.addEventListener("pointermove", (event) => {
-      mouseX = event.clientX;
-      mouseY = event.clientY;
+    document.addEventListener(
+      "pointermove",
+      (event) => {
+        mouseX = event.clientX;
+        mouseY = event.clientY;
 
-      showCursor();
-      setCursorPosition(cursorDot, mouseX, mouseY);
-    }, { passive: true });
+        showCursor();
+
+        // Dot follows pointer exactly.
+        setCursorPosition(cursorDot, mouseX, mouseY);
+      },
+      { passive: true }
+    );
 
     document.addEventListener("pointerover", (event) => {
-      if (event.target.closest("a, button, input, textarea, select, summary, [data-cursor-hover]")) {
-        cursorRing.classList.add("cursor-hover");
-      } else {
-        cursorRing.classList.remove("cursor-hover");
-      }
+      const interactive = event.target.closest(
+        "a, button, input, textarea, select, summary, [data-cursor-hover]"
+      );
+
+      cursorRing.classList.toggle(
+        "cursor-hover",
+        Boolean(interactive)
+      );
     });
 
     document.addEventListener("pointerdown", () => {
@@ -289,19 +350,21 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("blur", hideCursor);
     window.addEventListener("focus", showCursor);
 
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) hideCursor();
+    });
+
+    // Ring catches up smoothly with the exact dot position.
     const animateRing = () => {
       ringX += (mouseX - ringX) * 0.16;
       ringY += (mouseY - ringY) * 0.16;
 
       setCursorPosition(cursorRing, ringX, ringY);
+
       requestAnimationFrame(animateRing);
     };
 
     animateRing();
-
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) hideCursor();
-    });
   }
 
   /* =====================================
@@ -309,20 +372,26 @@ document.addEventListener("DOMContentLoaded", () => {
   ===================================== */
 
   if (finePointer && !reduceMotion) {
-    document.querySelectorAll(".magnetic, [data-magnetic]").forEach((element) => {
-      element.addEventListener("pointermove", (event) => {
-        const rect = element.getBoundingClientRect();
-        const x = event.clientX - rect.left - rect.width / 2;
-        const y = event.clientY - rect.top - rect.height / 2;
+    document
+      .querySelectorAll(".magnetic, [data-magnetic]")
+      .forEach((element) => {
+        element.addEventListener("pointermove", (event) => {
+          const rect = element.getBoundingClientRect();
 
-        element.style.transform =
-          `translate3d(${x * 0.12}px, ${y * 0.16}px, 0)`;
-      });
+          const x =
+            event.clientX - rect.left - rect.width / 2;
 
-      element.addEventListener("pointerleave", () => {
-        element.style.transform = "";
+          const y =
+            event.clientY - rect.top - rect.height / 2;
+
+          element.style.transform =
+            `translate3d(${x * 0.12}px, ${y * 0.16}px, 0)`;
+        });
+
+        element.addEventListener("pointerleave", () => {
+          element.style.transform = "";
+        });
       });
-    });
   }
 
   /* =====================================
@@ -333,6 +402,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".tilt-card").forEach((card) => {
       card.addEventListener("pointermove", (event) => {
         const rect = card.getBoundingClientRect();
+
         const x = (event.clientX - rect.left) / rect.width;
         const y = (event.clientY - rect.top) / rect.height;
 
@@ -353,16 +423,23 @@ document.addEventListener("DOMContentLoaded", () => {
      HERO PARALLAX
   ===================================== */
 
-  const heroScene = document.querySelector("[data-hero-scene]");
+  const heroScene = document.querySelector(
+    "[data-hero-scene]"
+  );
 
-  if (heroScene && finePointer && !reduceMotion) {
+  if (
+    heroScene &&
+    finePointer &&
+    !reduceMotion
+  ) {
     heroScene.addEventListener("pointermove", (event) => {
       const rect = heroScene.getBoundingClientRect();
-      const x = (event.clientX - rect.left) / rect.width - 0.5;
-      const y = (event.clientY - rect.top) / rect.height - 0.5;
 
-      heroScene.style.setProperty("--scene-x", `${x * 18}px`);
-      heroScene.style.setProperty("--scene-y", `${y * 18}px`);
+      const x =
+        (event.clientX - rect.left) / rect.width - 0.5;
+
+      const y =
+        (event.clientY - rect.top) / rect.height - 0.5;
 
       const sphere = heroScene.querySelector(".core-sphere");
       const orbit = heroScene.querySelector(".hero-orbit");
@@ -404,9 +481,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const group = item.parentElement;
 
-      group?.querySelectorAll(".faq-item[open]").forEach((other) => {
-        if (other !== item) other.open = false;
-      });
+      group?.querySelectorAll(".faq-item[open]").forEach(
+        (other) => {
+          if (other !== item) other.open = false;
+        }
+      );
     });
   });
 
@@ -443,7 +522,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* =====================================
-     CONTACT FORM — EMAIL DRAFT
+     CONTACT FORM
   ===================================== */
 
   const contactForm = document.querySelector("#contact-form");
@@ -463,7 +542,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const budget = data.get("budget") || "";
       const message = data.get("message") || "";
 
-      const subject = encodeURIComponent(`New website enquiry from ${name}`);
+      const subject = encodeURIComponent(
+        `New website enquiry from ${name}`
+      );
 
       const bodyText = [
         `Name: ${name}`,
@@ -476,7 +557,9 @@ document.addEventListener("DOMContentLoaded", () => {
       ].join("\n");
 
       const mailto =
-        `mailto:${TATVA_CONFIG.email}?subject=${subject}&body=${encodeURIComponent(bodyText)}`;
+        `mailto:${TATVA_CONFIG.email}` +
+        `?subject=${subject}` +
+        `&body=${encodeURIComponent(bodyText)}`;
 
       if (formNote) {
         formNote.textContent =
@@ -491,39 +574,65 @@ document.addEventListener("DOMContentLoaded", () => {
      BACK TO TOP
   ===================================== */
 
-  document.querySelectorAll("[data-back-to-top]").forEach((button) => {
-    button.addEventListener("click", () => {
-      window.scrollTo({
-        top: 0,
-        behavior: reduceMotion ? "auto" : "smooth"
+  document
+    .querySelectorAll("[data-back-to-top]")
+    .forEach((button) => {
+      button.addEventListener("click", () => {
+        window.scrollTo({
+          top: 0,
+          behavior: reduceMotion ? "auto" : "smooth"
+        });
       });
     });
-  });
 
   /* =====================================
      IMAGE REVEAL
   ===================================== */
 
-  if (!reduceMotion && "IntersectionObserver" in window) {
-    const images = document.querySelectorAll(".project-visual img, .image-reveal");
+  if (
+    !reduceMotion &&
+    "IntersectionObserver" in window
+  ) {
+    const images = document.querySelectorAll(
+      ".project-visual img, .image-reveal"
+    );
 
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("image-visible");
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15 });
+    const imageObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("image-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
 
-    images.forEach((image) => imageObserver.observe(image));
+    images.forEach((image) => {
+      imageObserver.observe(image);
+    });
   }
 
   /* =====================================
-     READY
+     REMOVE OLD BROKEN LOADERS
+  ===================================== */
+
+  document
+    .querySelectorAll(
+      ".loader, .preloader:not(.site-preloader), #loader, #preloader, .loading-screen"
+    )
+    .forEach((oldLoader) => {
+      oldLoader.style.display = "none";
+      oldLoader.style.pointerEvents = "none";
+    });
+
+  /* =====================================
+     PAGE READY
   ===================================== */
 
   requestAnimationFrame(() => {
     body.classList.add("page-loaded");
   });
+
 });
