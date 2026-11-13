@@ -1,8 +1,8 @@
 
 /* =========================================
-   TATVA WEBS — MAIN INTERACTIONS
-   Shared across all website pages
-========================================= */
+   TATVA WEBS
+   Website Interactions
+   ========================================= */
 
 const TATVA_CONFIG = {
   email: "hello@tatvawebs.com",
@@ -12,407 +12,521 @@ const TATVA_CONFIG = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  const body = document.body;
-  const page = body.dataset.page || "home";
-  const reduceMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
-  const finePointer = window.matchMedia(
-    "(hover: hover) and (pointer: fine)"
-  ).matches;
 
-  /* -----------------------------------------
+  /* =========================================
      LOADER
-  ----------------------------------------- */
+     ========================================= */
 
   const loader = document.querySelector(".loader");
 
-  const hideLoader = () => {
-    if (loader) loader.classList.add("done");
-  };
+  window.addEventListener("load", () => {
+    document.body.classList.add("is-loaded");
 
-  if (loader) {
-    if (document.readyState === "complete") {
-      hideLoader();
-    } else {
-      window.addEventListener("load", hideLoader, { once: true });
+    if (loader) {
+      loader.classList.add("loader-hidden");
+
+      setTimeout(() => {
+        loader.remove();
+      }, 900);
     }
+  });
 
-    // Safety fallback if a resource takes too long.
-    window.setTimeout(hideLoader, 3500);
-  }
 
-  /* -----------------------------------------
+  /* =========================================
      COPYRIGHT YEAR
-  ----------------------------------------- */
+     ========================================= */
 
   document.querySelectorAll("[data-year]").forEach(element => {
     element.textContent = new Date().getFullYear();
   });
 
-  /* -----------------------------------------
+
+  /* =========================================
      ACTIVE NAVIGATION
-  ----------------------------------------- */
+     ========================================= */
+
+  const currentPage = document.body.dataset.page;
 
   document.querySelectorAll(".main-nav a").forEach(link => {
-    const href = link.getAttribute("href") || "";
-    const target = href.split("/").pop().replace(".html", "");
+    const href = link.getAttribute("href");
 
-    const isActive =
-      (page === "home" && (target === "index" || target === "")) ||
-      target === page;
-
-    link.classList.toggle("active", isActive);
-
-    if (isActive) {
+    if (
+      href &&
+      (
+        href === `${currentPage}.html` ||
+        (currentPage === "home" && href === "index.html")
+      )
+    ) {
+      link.classList.add("active");
       link.setAttribute("aria-current", "page");
-    } else {
-      link.removeAttribute("aria-current");
     }
   });
 
-  /* -----------------------------------------
+
+  /* =========================================
      MOBILE NAVIGATION
-  ----------------------------------------- */
+     ========================================= */
 
-  const toggle = document.querySelector(".menu-toggle");
-  const nav = document.querySelector(".main-nav");
+  const menuToggle = document.querySelector(".menu-toggle");
+  const mainNav = document.querySelector(".main-nav");
 
-  const closeMenu = () => {
-    if (!toggle || !nav) return;
+  function closeMenu() {
+    if (!menuToggle || !mainNav) return;
 
-    nav.classList.remove("open");
-    toggle.setAttribute("aria-expanded", "false");
-  };
+    menuToggle.classList.remove("active");
+    mainNav.classList.remove("open");
+    menuToggle.setAttribute("aria-expanded", "false");
+  }
 
-  if (toggle && nav) {
-    toggle.addEventListener("click", () => {
-      const isOpen = nav.classList.toggle("open");
-      toggle.setAttribute("aria-expanded", String(isOpen));
+  if (menuToggle && mainNav) {
+
+    menuToggle.addEventListener("click", () => {
+      const isOpen = mainNav.classList.toggle("open");
+
+      menuToggle.classList.toggle("active", isOpen);
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
     });
 
-    nav.querySelectorAll("a").forEach(link => {
+    mainNav.querySelectorAll("a").forEach(link => {
       link.addEventListener("click", closeMenu);
-    });
-
-    document.addEventListener("keydown", event => {
-      if (event.key === "Escape" && nav.classList.contains("open")) {
-        closeMenu();
-        toggle.focus();
-      }
     });
 
     document.addEventListener("click", event => {
       if (
-        nav.classList.contains("open") &&
-        !nav.contains(event.target) &&
-        !toggle.contains(event.target)
+        !mainNav.contains(event.target) &&
+        !menuToggle.contains(event.target)
       ) {
         closeMenu();
       }
     });
 
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        closeMenu();
+      }
+    });
+
     window.addEventListener("resize", () => {
-      if (window.innerWidth > 760) closeMenu();
+      if (window.innerWidth > 900) {
+        closeMenu();
+      }
     });
   }
 
-  /* -----------------------------------------
+
+  /* =========================================
      SCROLL REVEAL
-  ----------------------------------------- */
+     ========================================= */
 
   const revealElements = document.querySelectorAll(".reveal");
 
-  if (reduceMotion || !("IntersectionObserver" in window)) {
-    revealElements.forEach(element => {
-      element.classList.add("visible");
-    });
-  } else {
-    const revealObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-          revealObserver.unobserve(entry.target);
-        }
-      });
-    }, {
-      threshold: 0.12,
-      rootMargin: "0px 0px -35px 0px"
-    });
+  if ("IntersectionObserver" in window) {
+
+    const revealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -45px 0px"
+      }
+    );
 
     revealElements.forEach(element => {
       revealObserver.observe(element);
     });
-  }
 
-  /* -----------------------------------------
-     PROCESS PAGE NUMBERING
-  ----------------------------------------- */
-
-  if (page === "process") {
-    document.querySelectorAll(".info-card").forEach((card, index) => {
-      card.setAttribute(
-        "data-stage",
-        String(index + 1).padStart(2, "0")
-      );
+  } else {
+    revealElements.forEach(element => {
+      element.classList.add("visible");
     });
   }
 
-  /* -----------------------------------------
+
+  /* =========================================
+     PROCESS TIMELINE
+     ========================================= */
+
+  document.querySelectorAll(".info-card").forEach((card, index) => {
+    if (document.body.dataset.page === "process") {
+      card.dataset.stage = String(index + 1).padStart(2, "0");
+    }
+  });
+
+
+  /* =========================================
      SCROLL PROGRESS
-  ----------------------------------------- */
+     ========================================= */
 
-  const progress = document.querySelector(".scroll-progress");
-  let scrollTicking = false;
+  const progressBar = document.querySelector(".scroll-progress");
 
-  const updateProgress = () => {
-    if (!progress) return;
+  function updateScrollProgress() {
+    if (!progressBar) return;
 
-    const scrollable =
+    const scrollableHeight =
       document.documentElement.scrollHeight - window.innerHeight;
 
-    const percentage = scrollable > 0
-      ? (window.scrollY / scrollable) * 100
+    const progress = scrollableHeight > 0
+      ? (window.scrollY / scrollableHeight) * 100
       : 0;
 
-    progress.style.width = `${percentage}%`;
-    scrollTicking = false;
-  };
+    progressBar.style.width = `${progress}%`;
+  }
 
-  window.addEventListener("scroll", () => {
-    if (!scrollTicking) {
-      requestAnimationFrame(updateProgress);
-      scrollTicking = true;
-    }
-  }, { passive: true });
+  window.addEventListener("scroll", updateScrollProgress, {
+    passive: true
+  });
 
-  updateProgress();
+  updateScrollProgress();
 
-  /* -----------------------------------------
-     DESKTOP CURSOR
-  ----------------------------------------- */
 
-  const dot = document.querySelector(".cursor-dot");
-  const ring = document.querySelector(".cursor-ring");
+  /* =========================================
+     CUSTOM CURSOR
+     ========================================= */
 
-  if (finePointer && !reduceMotion) {
+  const cursorDot = document.querySelector(".cursor-dot");
+  const cursorRing = document.querySelector(".cursor-ring");
+
+  const canUseCustomCursor =
+    window.matchMedia("(pointer: fine)").matches &&
+    window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
+
+  if (cursorDot && cursorRing && canUseCustomCursor) {
+
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
+
     let ringX = mouseX;
     let ringY = mouseY;
+
+    let cursorVisible = false;
 
     document.addEventListener("mousemove", event => {
       mouseX = event.clientX;
       mouseY = event.clientY;
 
-      if (dot) {
-        dot.style.left = `${mouseX}px`;
-        dot.style.top = `${mouseY}px`;
-        dot.style.opacity = "1";
+      cursorDot.style.left = `${mouseX}px`;
+      cursorDot.style.top = `${mouseY}px`;
+
+      if (!cursorVisible) {
+        cursorDot.classList.add("visible");
+        cursorRing.classList.add("visible");
+        cursorVisible = true;
       }
+    });
 
-      if (ring) ring.style.opacity = "1";
+    document.addEventListener("mouseleave", () => {
+      cursorDot.classList.remove("visible");
+      cursorRing.classList.remove("visible");
+      cursorVisible = false;
+    });
 
-      body.style.setProperty("--cursor-x", `${mouseX}px`);
-      body.style.setProperty("--cursor-y", `${mouseY}px`);
-    }, { passive: true });
+    document.addEventListener("mouseenter", () => {
+      cursorDot.classList.add("visible");
+      cursorRing.classList.add("visible");
+      cursorVisible = true;
+    });
 
-    const followCursor = () => {
-      ringX += (mouseX - ringX) * 0.32;
-      ringY += (mouseY - ringY) * 0.32;
+    function animateCursor() {
+      ringX += (mouseX - ringX) * 0.14;
+      ringY += (mouseY - ringY) * 0.14;
 
-      if (ring) {
-        ring.style.left = `${ringX}px`;
-        ring.style.top = `${ringY}px`;
-      }
+      cursorRing.style.left = `${ringX}px`;
+      cursorRing.style.top = `${ringY}px`;
 
-      requestAnimationFrame(followCursor);
-    };
+      requestAnimationFrame(animateCursor);
+    }
 
-    if (ring) requestAnimationFrame(followCursor);
+    animateCursor();
 
-    document.querySelectorAll("a, button, summary").forEach(element => {
+    const interactiveElements = document.querySelectorAll(
+      "a, button, input, textarea, select, .tilt-card, .project-card, summary"
+    );
+
+    interactiveElements.forEach(element => {
+
       element.addEventListener("mouseenter", () => {
-        ring?.classList.add("hover");
+        cursorDot.classList.add("cursor-hover");
+        cursorRing.classList.add("cursor-hover");
       });
 
       element.addEventListener("mouseleave", () => {
-        ring?.classList.remove("hover");
+        cursorDot.classList.remove("cursor-hover");
+        cursorRing.classList.remove("cursor-hover");
       });
+
     });
 
     document.addEventListener("mousedown", () => {
-      if (ring) {
-        ring.style.width = "22px";
-        ring.style.height = "22px";
-      }
+      cursorDot.classList.add("cursor-click");
+      cursorRing.classList.add("cursor-click");
     });
 
     document.addEventListener("mouseup", () => {
-      if (ring) {
-        ring.style.width = "";
-        ring.style.height = "";
-      }
+      cursorDot.classList.remove("cursor-click");
+      cursorRing.classList.remove("cursor-click");
     });
-
-    /* -----------------------------------------
-       MAGNETIC BUTTONS
-    ----------------------------------------- */
-
-    if (!reduceMotion) {
-      document.querySelectorAll(".magnetic").forEach(element => {
-        element.addEventListener("mousemove", event => {
-          const rect = element.getBoundingClientRect();
-
-          const dx = event.clientX - (rect.left + rect.width / 2);
-          const dy = event.clientY - (rect.top + rect.height / 2);
-
-          element.style.transform =
-            `translate(${dx * 0.10}px, ${dy * 0.14}px)`;
-        });
-
-        element.addEventListener("mouseleave", () => {
-          element.style.transform = "";
-        });
-      });
-
-      /* -----------------------------------------
-         3D TILT CARDS
-      ----------------------------------------- */
-
-      document.querySelectorAll(".tilt-card").forEach(card => {
-        card.addEventListener("mousemove", event => {
-          const rect = card.getBoundingClientRect();
-
-          const px = (event.clientX - rect.left) / rect.width;
-          const py = (event.clientY - rect.top) / rect.height;
-
-          const rotateX = (0.5 - py) * 5;
-          const rotateY = (px - 0.5) * 7;
-
-          card.style.transform =
-            `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-3px)`;
-
-          card.style.setProperty("--mx", `${px * 100}%`);
-          card.style.setProperty("--my", `${py * 100}%`);
-        });
-
-        card.addEventListener("mouseleave", () => {
-          card.style.transform = "";
-        });
-      });
-    }
-
-    /* -----------------------------------------
-       HERO LIGHTING
-    ----------------------------------------- */
-
-    const heroArt = document.querySelector(".hero-art");
-
-    if (heroArt) {
-      heroArt.addEventListener("pointermove", event => {
-        const rect = heroArt.getBoundingClientRect();
-
-        heroArt.style.setProperty(
-          "--spot-x",
-          `${event.clientX - rect.left}px`
-        );
-
-        heroArt.style.setProperty(
-          "--spot-y",
-          `${event.clientY - rect.top}px`
-        );
-      }, { passive: true });
-    }
   }
 
-  /* -----------------------------------------
+
+  /* =========================================
+     CURSOR REACTIVE LIGHTING
+     ========================================= */
+
+  if (canUseCustomCursor) {
+
+    document.addEventListener("mousemove", event => {
+
+      const x = (event.clientX / window.innerWidth) * 100;
+      const y = (event.clientY / window.innerHeight) * 100;
+
+      document.body.style.setProperty("--mouse-x", `${x}%`);
+      document.body.style.setProperty("--mouse-y", `${y}%`);
+
+    });
+
+  }
+
+
+  /* =========================================
+     MAGNETIC BUTTONS
+     ========================================= */
+
+  const magneticButtons = document.querySelectorAll(".magnetic");
+
+  if (canUseCustomCursor) {
+
+    magneticButtons.forEach(button => {
+
+      button.addEventListener("mousemove", event => {
+
+        const rect = button.getBoundingClientRect();
+
+        const x = event.clientX - rect.left - rect.width / 2;
+        const y = event.clientY - rect.top - rect.height / 2;
+
+        button.style.transform =
+          `translate(${x * 0.12}px, ${y * 0.12}px)`;
+
+      });
+
+      button.addEventListener("mouseleave", () => {
+        button.style.transform = "";
+      });
+
+    });
+
+  }
+
+
+  /* =========================================
+     3D TILT CARDS
+     ========================================= */
+
+  const tiltCards = document.querySelectorAll(".tilt-card");
+
+  if (canUseCustomCursor) {
+
+    tiltCards.forEach(card => {
+
+      card.addEventListener("mousemove", event => {
+
+        const rect = card.getBoundingClientRect();
+
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((y - centerY) / centerY) * -4;
+        const rotateY = ((x - centerX) / centerX) * 4;
+
+        card.style.transform =
+          `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+        card.style.setProperty("--card-mouse-x", `${x}px`);
+        card.style.setProperty("--card-mouse-y", `${y}px`);
+
+      });
+
+      card.addEventListener("mouseleave", () => {
+        card.style.transform = "";
+      });
+
+    });
+
+  }
+
+
+  /* =========================================
+     HERO LIGHTING
+     ========================================= */
+
+  const heroArt = document.querySelector("[data-hero-scene]");
+
+  if (heroArt && canUseCustomCursor) {
+
+    heroArt.addEventListener("mousemove", event => {
+
+      const rect = heroArt.getBoundingClientRect();
+
+      const x = (event.clientX - rect.left) / rect.width;
+      const y = (event.clientY - rect.top) / rect.height;
+
+      heroArt.style.setProperty("--scene-x", `${(x - 0.5) * 22}px`);
+      heroArt.style.setProperty("--scene-y", `${(y - 0.5) * 22}px`);
+
+      heroArt.style.setProperty("--light-x", `${x * 100}%`);
+      heroArt.style.setProperty("--light-y", `${y * 100}%`);
+
+    });
+
+    heroArt.addEventListener("mouseleave", () => {
+      heroArt.style.setProperty("--scene-x", "0px");
+      heroArt.style.setProperty("--scene-y", "0px");
+      heroArt.style.setProperty("--light-x", "50%");
+      heroArt.style.setProperty("--light-y", "50%");
+    });
+
+  }
+
+
+  /* =========================================
      CONTACT DETAILS
-  ----------------------------------------- */
+     ========================================= */
 
-  document.querySelectorAll("[data-email]").forEach(element => {
+  document.querySelectorAll("[data-contact-email]").forEach(element => {
     element.textContent = TATVA_CONFIG.email;
-  });
 
-  document.querySelectorAll("[data-email-link]").forEach(element => {
-    element.href = `mailto:${TATVA_CONFIG.email}`;
+    if (TATVA_CONFIG.email) {
+      element.href = `mailto:${TATVA_CONFIG.email}`;
+    }
   });
 
   document.querySelectorAll("[data-whatsapp]").forEach(element => {
+
     if (TATVA_CONFIG.whatsapp) {
-      element.textContent = "Chat with us";
-      element.href = `https://wa.me/${TATVA_CONFIG.whatsapp}`;
-      element.target = "_blank";
-      element.rel = "noopener noreferrer";
+      element.href =
+        `https://wa.me/${TATVA_CONFIG.whatsapp.replace(/\D/g, "")}`;
+    } else {
+      element.style.display = "none";
     }
+
   });
 
-  /* -----------------------------------------
+  document.querySelectorAll("[data-instagram]").forEach(element => {
+
+    if (TATVA_CONFIG.instagram) {
+      element.href = TATVA_CONFIG.instagram;
+    } else {
+      element.style.display = "none";
+    }
+
+  });
+
+  document.querySelectorAll("[data-linkedin]").forEach(element => {
+
+    if (TATVA_CONFIG.linkedin) {
+      element.href = TATVA_CONFIG.linkedin;
+    } else {
+      element.style.display = "none";
+    }
+
+  });
+
+
+  /* =========================================
      CONTACT FORM
-  ----------------------------------------- */
+     ========================================= */
 
-  const form = document.getElementById("contact-form");
+  const contactForm = document.querySelector("#contact-form");
+  const formNote = document.querySelector("#form-note");
 
-  if (form) {
-    form.addEventListener("submit", event => {
+  if (contactForm) {
+
+    contactForm.addEventListener("submit", event => {
       event.preventDefault();
 
-      if (!form.reportValidity()) return;
+      const formData = new FormData(contactForm);
 
-      const data = new FormData(form);
+      const name = formData.get("name") || "";
+      const email = formData.get("email") || "";
+      const service = formData.get("service") || "Not specified";
+      const budget = formData.get("budget") || "Not specified";
+      const message = formData.get("message") || "";
 
-      const subject = encodeURIComponent(
-        `Tatva Webs project enquiry — ${data.get("name") || ""}`
-      );
+      if (!name.trim() || !email.trim() || !message.trim()) {
 
-      const bodyText = [
-        `Name: ${data.get("name") || ""}`,
-        `Email: ${data.get("email") || ""}`,
-        `Company: ${data.get("company") || ""}`,
-        `Project type: ${data.get("project") || ""}`,
-        "",
-        "Project details:",
-        data.get("details") || ""
-      ].join("\n");
+        if (formNote) {
+          formNote.textContent =
+            "Please complete all required fields.";
+        }
 
-      const mailto =
-        `mailto:${TATVA_CONFIG.email}?subject=${subject}&body=${encodeURIComponent(bodyText)}`;
-
-      const note = document.getElementById("form-note");
-
-      if (note) {
-        note.textContent =
-          "Your email app should open with the enquiry prepared. Send the email to complete your enquiry.";
+        return;
       }
 
-      window.location.href = mailto;
+      const subject = encodeURIComponent(
+        `New project enquiry from ${name}`
+      );
+
+      const body = encodeURIComponent(
+        `Name: ${name}\n` +
+        `Email: ${email}\n` +
+        `Service: ${service}\n` +
+        `Budget: ${budget}\n\n` +
+        `Message:\n${message}`
+      );
+
+      if (formNote) {
+        formNote.textContent =
+          "Opening your email app. Please send the prepared message to complete your enquiry.";
+      }
+
+      window.location.href =
+        `mailto:${TATVA_CONFIG.email}?subject=${subject}&body=${body}`;
+
     });
+
   }
 
-  /* -----------------------------------------
+
+  /* =========================================
      FAQ ACCORDION
-     Allows one open item at a time
-  ----------------------------------------- */
+     ========================================= */
 
   const faqItems = document.querySelectorAll(".faq-item");
 
   faqItems.forEach(item => {
+
     item.addEventListener("toggle", () => {
+
       if (!item.open) return;
 
       faqItems.forEach(otherItem => {
-        if (otherItem !== item) otherItem.open = false;
+        if (otherItem !== item) {
+          otherItem.open = false;
+        }
       });
+
     });
+
   });
 
 });
 
+
 /* =========================================
-   TATVA WEBS — CINEMATIC HERO PARALLAX
-========================================= */
+   HERO PARALLAX
+   ========================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
+
   const heroScene = document.querySelector("[data-hero-scene]");
 
   if (!heroScene) return;
@@ -422,57 +536,59 @@ document.addEventListener("DOMContentLoaded", () => {
   ).matches;
 
   const finePointer = window.matchMedia(
-    "(hover: hover) and (pointer: fine)"
+    "(pointer: fine)"
   ).matches;
 
   if (reduceMotion || !finePointer) return;
 
-  let targetX = 0;
-  let targetY = 0;
-  let currentX = 0;
-  let currentY = 0;
-  let animationFrame = null;
+  const heroCore = heroScene.querySelector(".hero-core");
+  const heroPanel = heroScene.querySelector(".hero-interface");
 
-  const animateScene = () => {
-    currentX += (targetX - currentX) * 0.12;
-    currentY += (targetY - currentY) * 0.12;
+  heroScene.addEventListener("mousemove", event => {
 
-    heroScene.style.setProperty("--scene-x", `${currentX}px`);
-    heroScene.style.setProperty("--scene-y", `${currentY}px`);
-
-    if (
-      Math.abs(targetX - currentX) > 0.05 ||
-      Math.abs(targetY - currentY) > 0.05
-    ) {
-      animationFrame = requestAnimationFrame(animateScene);
-    } else {
-      currentX = targetX;
-      currentY = targetY;
-      animationFrame = null;
-    }
-  };
-
-  const scheduleAnimation = () => {
-    if (!animationFrame) {
-      animationFrame = requestAnimationFrame(animateScene);
-    }
-  };
-
-  heroScene.addEventListener("pointermove", event => {
     const rect = heroScene.getBoundingClientRect();
 
-    const x = (event.clientX - rect.left) / rect.width - 0.5;
-    const y = (event.clientY - rect.top) / rect.height - 0.5;
+    const mouseX = (event.clientX - rect.left) / rect.width - 0.5;
+    const mouseY = (event.clientY - rect.top) / rect.height - 0.5;
 
-    targetX = x * 20;
-    targetY = y * 16;
+    if (heroCore) {
+      heroCore.style.setProperty(
+        "--parallax-x",
+        `${mouseX * 14}px`
+      );
 
-    scheduleAnimation();
-  }, { passive: true });
+      heroCore.style.setProperty(
+        "--parallax-y",
+        `${mouseY * 14}px`
+      );
+    }
 
-  heroScene.addEventListener("pointerleave", () => {
-    targetX = 0;
-    targetY = 0;
-    scheduleAnimation();
+    if (heroPanel) {
+      heroPanel.style.setProperty(
+        "--panel-x",
+        `${mouseX * -10}px`
+      );
+
+      heroPanel.style.setProperty(
+        "--panel-y",
+        `${mouseY * -10}px`
+      );
+    }
+
   });
+
+  heroScene.addEventListener("mouseleave", () => {
+
+    if (heroCore) {
+      heroCore.style.setProperty("--parallax-x", "0px");
+      heroCore.style.setProperty("--parallax-y", "0px");
+    }
+
+    if (heroPanel) {
+      heroPanel.style.setProperty("--panel-x", "0px");
+      heroPanel.style.setProperty("--panel-y", "0px");
+    }
+
+  });
+
 });
