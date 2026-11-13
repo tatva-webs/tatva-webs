@@ -592,3 +592,109 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 });
+/* =========================================
+   TATVA WEBS — ADVANCED CURSOR ENGINE
+========================================= */
+
+(() => {
+  const finePointer = window.matchMedia("(pointer: fine)").matches;
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  if (!finePointer || reducedMotion) return;
+
+  const dot = document.querySelector(".cursor-dot");
+  const ring = document.querySelector(".cursor-ring");
+
+  if (!dot || !ring) return;
+
+  const state = {
+    mouseX: window.innerWidth / 2,
+    mouseY: window.innerHeight / 2,
+    ringX: window.innerWidth / 2,
+    ringY: window.innerHeight / 2,
+    active: false,
+    hovering: false
+  };
+
+  const interactive = [
+    "a",
+    "button",
+    "input",
+    "textarea",
+    "select",
+    "summary",
+    "[role='button']",
+    ".magnetic",
+    ".tilt-card"
+  ].join(",");
+
+  const textFields = "input, textarea, [contenteditable='true']";
+
+  function updatePosition(element, x, y, size) {
+    element.style.transform =
+      `translate3d(${x - size / 2}px, ${y - size / 2}px, 0)`;
+  }
+
+  function animate() {
+    state.ringX += (state.mouseX - state.ringX) * 0.16;
+    state.ringY += (state.mouseY - state.ringY) * 0.16;
+
+    updatePosition(dot, state.mouseX, state.mouseY, 6);
+    updatePosition(ring, state.ringX, state.ringY, 34);
+
+    requestAnimationFrame(animate);
+  }
+
+  document.addEventListener("mousemove", (event) => {
+    state.mouseX = event.clientX;
+    state.mouseY = event.clientY;
+
+    if (!state.active) {
+      state.active = true;
+      document.body.classList.add("cursor-active");
+    }
+  });
+
+  document.addEventListener("mouseover", (event) => {
+    const target = event.target;
+
+    if (!(target instanceof Element)) return;
+
+    const isInteractive = target.closest(interactive);
+    const isText = target.closest(textFields);
+
+    document.body.classList.toggle("cursor-hover", !!isInteractive);
+    document.body.classList.toggle("cursor-text", !!isText);
+  });
+
+  document.addEventListener("mousedown", () => {
+    document.body.classList.add("cursor-click");
+  });
+
+  document.addEventListener("mouseup", () => {
+    document.body.classList.remove("cursor-click");
+  });
+
+  document.addEventListener("mouseleave", () => {
+    document.body.classList.remove("cursor-active");
+  });
+
+  document.addEventListener("mouseenter", () => {
+    if (state.active) {
+      document.body.classList.add("cursor-active");
+    }
+  });
+
+  window.addEventListener("blur", () => {
+    document.body.classList.remove(
+      "cursor-active",
+      "cursor-hover",
+      "cursor-click",
+      "cursor-text"
+    );
+  });
+
+  animate();
+})();
