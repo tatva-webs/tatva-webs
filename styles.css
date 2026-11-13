@@ -2239,3 +2239,30 @@ svg {
     cursor: auto !important;
   }
 }
+/* TATVA WEBS — LOADER FAILSAFE */
+.loader {
+  animation: loaderFailsafe 0.6s ease 3s forwards !important;
+  pointer-events: none;
+}
+
+.loader img {
+  width: 115px !important;
+  height: 115px !important;
+  max-width: 115px !important;
+  max-height: 115px !important;
+  object-fit: contain !important;
+}
+
+@keyframes loaderFailsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+.loader.done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
