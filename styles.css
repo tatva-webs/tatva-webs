@@ -770,3 +770,303 @@ textarea:focus-visible {
   }
 }
 
+/* =========================================
+   TATVA WEBS — CINEMATIC SYSTEM FIX
+   Append at the VERY BOTTOM of styles.css
+========================================= */
+
+/* Consistent page atmosphere */
+body {
+  background:
+    radial-gradient(ellipse at 50% -20%, rgba(255, 106, 0, .075), transparent 55%),
+    var(--bg);
+}
+
+main,
+.site-header,
+.site-footer {
+  isolation: isolate;
+}
+
+/* Better section rhythm */
+.section-pad {
+  scroll-margin-top: 100px;
+}
+
+.section-label {
+  color: #ffad62;
+}
+
+/* =========================================
+   HERO — 3D OBJECT POSITIONING FIX
+========================================= */
+
+.hero-art[data-hero-scene] {
+  position: relative;
+  overflow: visible;
+  transform-style: preserve-3d;
+  perspective: 1100px;
+}
+
+/* Center the sphere and give its children
+   a proper positioning reference. */
+.hero-core {
+  position: absolute;
+  z-index: 1;
+  width: 210px;
+  height: 250px;
+  left: 50%;
+  top: 50%;
+  transform:
+    translate(
+      calc(-50% + var(--scene-x, 0px)),
+      calc(-50% + var(--scene-y, 0px))
+    );
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+/* Sphere lighting */
+.core-halo {
+  left: 10px;
+  top: 25px;
+  width: 190px;
+  height: 190px;
+}
+
+.core-sphere {
+  left: 22px;
+  top: 35px;
+  width: 165px;
+  height: 165px;
+}
+
+.core-base {
+  left: 32px;
+  bottom: 12px;
+}
+
+/* Center the glass interface independently. */
+.hero-panel.hero-interface {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: 50%;
+  margin: 0;
+  transform:
+    translate(
+      calc(-50% - var(--scene-x, 0px)),
+      calc(-50% - var(--scene-y, 0px))
+    )
+    rotateY(-12deg)
+    rotateX(5deg);
+  transform-origin: center;
+  animation: interfaceHover 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes interfaceHover {
+  0%, 100% {
+    margin-top: 0;
+  }
+  50% {
+    margin-top: -9px;
+  }
+}
+
+/* Keep the glass panel readable above the sphere. */
+.hero-interface .panel-content {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 85% 80%, rgba(255, 106, 0, .24), transparent 55%),
+    linear-gradient(140deg, #19130f, #090909);
+}
+
+/* Orbit depth */
+.hero-orbit {
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-orbit span {
+  box-shadow:
+    0 0 12px #ff7900,
+    0 0 28px #ff6500,
+    0 0 45px rgba(255, 106, 0, .4);
+}
+
+/* Chips and status should remain above the scene. */
+.hero-art .floating-chip,
+.hero-status {
+  z-index: 6;
+}
+
+/* More atmospheric lighting */
+.hero-scene-glow {
+  width: 470px;
+  height: 470px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 112, 0, .23),
+    rgba(255, 90, 0, .06) 45%,
+    transparent 72%
+  );
+}
+
+/* =========================================
+   SHARED HOVER INTERACTIONS
+========================================= */
+
+.service-card,
+.info-card,
+.faq-item,
+.project-card,
+.button,
+.text-link {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.service-card,
+.info-card,
+.project-visual,
+.faq-item,
+.contact-form {
+  transition:
+    transform .55s var(--ease),
+    border-color .35s ease,
+    box-shadow .45s ease,
+    background .4s ease;
+}
+
+.service-card:hover,
+.info-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Stagger reveal inside grids */
+.service-grid .reveal:nth-child(2),
+.info-grid .reveal:nth-child(2) {
+  transition-delay: .08s;
+}
+
+.service-grid .reveal:nth-child(3),
+.info-grid .reveal:nth-child(3) {
+  transition-delay: .16s;
+}
+
+/* Better link feedback */
+.text-link {
+  transition: color .3s ease;
+}
+
+.text-link:hover {
+  color: #ffad62;
+}
+
+/* Premium focus state */
+.button:focus-visible,
+.main-nav a:focus-visible,
+.text-link:focus-visible {
+  outline: 2px solid #ffad42;
+  outline-offset: 5px;
+}
+
+/* =========================================
+   MOBILE HERO FIX
+========================================= */
+
+@media (max-width: 760px) {
+  .hero-art[data-hero-scene] {
+    width: 100%;
+    height: 410px;
+    margin-top: 25px;
+    margin-bottom: 0;
+    overflow: visible;
+    transform: none;
+  }
+
+  .hero-core {
+    transform:
+      translate(
+        calc(-50% + var(--scene-x, 0px)),
+        calc(-50% + var(--scene-y, 0px))
+      )
+      scale(.82);
+  }
+
+  .hero-panel.hero-interface {
+    width: min(340px, 85%);
+    height: 305px;
+    transform:
+      translate(-50%, -50%)
+      rotateY(-5deg)
+      rotateX(2deg);
+  }
+
+  .hero-interface .panel-heading {
+    font-size: 42px;
+  }
+
+  .hero-status {
+    top: 5px;
+    right: 0;
+  }
+
+  .hero-art .chip-one {
+    left: -5px;
+    top: 75px;
+  }
+
+  .hero-art .chip-two {
+    right: -5px;
+    bottom: 25px;
+  }
+
+  .hero-orbit.orbit-one {
+    width: 330px;
+    margin-left: -165px;
+  }
+
+  .hero-orbit.orbit-two {
+    width: 370px;
+    margin-left: -185px;
+  }
+
+  .hero-orbit.orbit-three {
+    height: 350px;
+    margin-top: -175px;
+  }
+}
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-interface,
+  .hero-core,
+  .hero-orbit,
+  .hero-status,
+  .floating-chip,
+  .core-sphere,
+  .core-halo {
+    animation: none !important;
+  }
+
+  .hero-core {
+    transform: translate(-50%, -50%);
+  }
+
+  .hero-panel.hero-interface {
+    transform: translate(-50%, -50%);
+  }
+
+  .service-card,
+  .info-card,
+  .project-visual {
+    transition: none;
+  }
+}
+
+
