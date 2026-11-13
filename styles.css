@@ -256,19 +256,17 @@ body[data-page="services"] .info-card { min-height:300px; }
 /* Central metallic object */
 
 .hero-core {
-  position: absolute;
-  z-index: 2;
-  width: 210px;
-  height: 260px;
-  left: 50%;
-  top: 50%;
-  transform:
-    translate(
-      calc(-50% + var(--scene-x) * .5),
-      calc(-50% + var(--scene-y) * .5)
-    );
-  transform-style: preserve-3d;
-  pointer-events: none;
+  transform: translate(
+    calc(-50% + var(--scene-x, 0px)),
+    calc(-50% + var(--scene-y, 0px))
+  );
+}
+
+.hero-interface {
+  transform: translate(
+    calc(-50% - var(--scene-x, 0px)),
+    calc(-50% - var(--scene-y, 0px))
+  );
 }
 
 .core-halo {
@@ -372,26 +370,18 @@ body[data-page="services"] .info-card { min-height:300px; }
 
 /* Floating glass interface */
 
+.hero-core {
+  transform: translate(
+    calc(-50% + var(--scene-x, 0px)),
+    calc(-50% + var(--scene-y, 0px))
+  );
+}
+
 .hero-interface {
-  position: absolute;
-  width: min(390px, 85%);
-  height: 335px;
-  left: 50%;
-  top: 50%;
-  z-index: 4;
-  overflow: hidden;
-  border-radius: 18px;
-
-  transform:
-    translate(
-      calc(-50% + var(--scene-x) * -.65),
-      calc(-50% + var(--scene-y) * -.65)
-    )
-    rotateY(-13deg)
-    rotateX(5deg);
-
-  transition: border-color .3s;
-  animation: interfaceFloat 6s ease-in-out infinite;
+  transform: translate(
+    calc(-50% - var(--scene-x, 0px)),
+    calc(-50% - var(--scene-y, 0px))
+  );
 }
 
 @keyframes interfaceFloat {
