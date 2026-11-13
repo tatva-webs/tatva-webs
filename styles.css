@@ -137,3 +137,440 @@ body[data-page="services"] .info-card { min-height:300px; }
     display: none !important;
   }
 }
+
+/* =========================================
+   TATVA WEBS — CINEMATIC 3D HERO UPGRADE
+   ========================================= */
+
+.hero-art[data-hero-scene] {
+  --scene-x: 0px;
+  --scene-y: 0px;
+  --scene-rotate-x: 0deg;
+  --scene-rotate-y: 0deg;
+
+  isolation: isolate;
+  transform-style: preserve-3d;
+  perspective: 1100px;
+}
+
+/* Background grid */
+
+.hero-scene-grid {
+  position: absolute;
+  inset: 5%;
+  z-index: -2;
+  background-image:
+    linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.055) 1px, transparent 1px);
+  background-size: 45px 45px;
+  opacity: .35;
+  mask-image: radial-gradient(ellipse, black, transparent 72%);
+  pointer-events: none;
+}
+
+/* Atmospheric glow */
+
+.hero-scene-glow {
+  position: absolute;
+  width: 430px;
+  height: 430px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255,112,0,.24),
+    rgba(255,90,0,.07) 42%,
+    transparent 72%
+  );
+  filter: blur(35px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Orbital rings */
+
+.hero-orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border: 1px solid rgba(255,155,65,.36);
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.hero-orbit span {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  top: 50%;
+  left: -5px;
+  border-radius: 50%;
+  background: #ffb34d;
+  box-shadow: 0 0 12px #ff7900, 0 0 28px #ff6500;
+}
+
+.orbit-one {
+  width: 440px;
+  height: 190px;
+  margin: -95px 0 0 -220px;
+  transform: rotate(-28deg);
+  animation: orbitRotateOne 13s linear infinite;
+}
+
+.orbit-two {
+  width: 490px;
+  height: 255px;
+  margin: -127px 0 0 -245px;
+  transform: rotate(55deg);
+  border-color: rgba(255,190,110,.2);
+  animation: orbitRotateTwo 17s linear infinite;
+}
+
+.orbit-three {
+  width: 350px;
+  height: 420px;
+  margin: -210px 0 0 -175px;
+  transform: rotate(65deg);
+  border-color: rgba(255,106,0,.2);
+  animation: orbitRotateThree 20s linear infinite;
+}
+
+@keyframes orbitRotateOne {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
+}
+
+@keyframes orbitRotateTwo {
+  from { rotate: 0deg; }
+  to { rotate: -360deg; }
+}
+
+@keyframes orbitRotateThree {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
+}
+
+/* Central metallic object */
+
+.hero-core {
+  position: absolute;
+  z-index: 2;
+  width: 210px;
+  height: 260px;
+  left: 50%;
+  top: 50%;
+  transform:
+    translate(
+      calc(-50% + var(--scene-x) * .5),
+      calc(-50% + var(--scene-y) * .5)
+    );
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.core-halo {
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  left: 10px;
+  top: 20px;
+  border-radius: 50%;
+  background: #ff6900;
+  opacity: .16;
+  filter: blur(45px);
+  animation: haloPulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes haloPulse {
+  from { opacity: .10; transform: scale(.85); }
+  to { opacity: .28; transform: scale(1.15); }
+}
+
+.core-sphere {
+  position: absolute;
+  width: 165px;
+  height: 165px;
+  top: 35px;
+  left: 22px;
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 29% 22%,
+      #fff5d9 0%,
+      #ffc16b 7%,
+      #ff851e 20%,
+      #a63d08 48%,
+      #351307 76%,
+      #0c0806 100%
+    );
+
+  box-shadow:
+    inset -20px -25px 40px #000b,
+    inset 12px 10px 25px #ffffff4a,
+    0 15px 55px #ff69004d,
+    0 0 75px #ff680029;
+
+  animation: sphereFloat 5s ease-in-out infinite;
+}
+
+.sphere-highlight {
+  position: absolute;
+  width: 48px;
+  height: 22px;
+  top: 20px;
+  left: 30px;
+  border-radius: 50%;
+  background: #fff8e4;
+  filter: blur(9px);
+  opacity: .8;
+  transform: rotate(-35deg);
+}
+
+.sphere-reflection {
+  position: absolute;
+  width: 65px;
+  height: 120px;
+  top: 20px;
+  right: 18px;
+  border-right: 2px solid #ffc07855;
+  border-radius: 50%;
+  transform: rotate(-25deg);
+  filter: blur(3px);
+}
+
+.sphere-shadow {
+  position: absolute;
+  width: 90px;
+  height: 120px;
+  bottom: -5px;
+  left: 40px;
+  border-radius: 50%;
+  background: linear-gradient(transparent, #080808a8);
+  filter: blur(12px);
+}
+
+@keyframes sphereFloat {
+  0%, 100% { transform: translateY(0) rotate(-5deg); }
+  50% { transform: translateY(-13px) rotate(5deg); }
+}
+
+.core-base {
+  position: absolute;
+  width: 145px;
+  height: 25px;
+  left: 32px;
+  bottom: 12px;
+  border-radius: 50%;
+  background: #ff7600;
+  opacity: .18;
+  filter: blur(15px);
+}
+
+/* Floating glass interface */
+
+.hero-interface {
+  position: absolute;
+  width: min(390px, 85%);
+  height: 335px;
+  left: 50%;
+  top: 50%;
+  z-index: 4;
+  overflow: hidden;
+  border-radius: 18px;
+
+  transform:
+    translate(
+      calc(-50% + var(--scene-x) * -.65),
+      calc(-50% + var(--scene-y) * -.65)
+    )
+    rotateY(-13deg)
+    rotateX(5deg);
+
+  transition: border-color .3s;
+  animation: interfaceFloat 6s ease-in-out infinite;
+}
+
+@keyframes interfaceFloat {
+  0%, 100% {
+    margin-top: 0;
+  }
+  50% {
+    margin-top: -10px;
+  }
+}
+
+.hero-interface .panel-content {
+  background:
+    radial-gradient(ellipse at 85% 80%, #ff6a0035, transparent 55%),
+    linear-gradient(140deg, #19130f, #090909);
+}
+
+/* Floating chips */
+
+.hero-art .floating-chip {
+  z-index: 6;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.hero-art .chip-one {
+  transform: translateX(calc(var(--scene-x) * -.5));
+}
+
+.hero-art .chip-two {
+  transform: translateX(calc(var(--scene-x) * .5));
+}
+
+/* Status panel */
+
+.hero-status {
+  position: absolute;
+  right: 0;
+  top: 70px;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 15px;
+  border-radius: 11px;
+  animation: float 5s ease-in-out infinite;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  background: #a6ef84;
+  border-radius: 50%;
+  box-shadow: 0 0 13px #a6ef84;
+}
+
+.hero-status span:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hero-status small {
+  font: 8px 'DM Mono', monospace;
+  color: #999;
+}
+
+.hero-status b {
+  font: 9px 'DM Mono', monospace;
+  color: #eee;
+}
+
+/* Additional particles */
+
+.spark-three {
+  top: 48%;
+  left: 12%;
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Cursor-reactive lighting */
+
+.hero-art[data-hero-scene]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: radial-gradient(
+    250px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgba(255,153,65,.15),
+    transparent 75%
+  );
+  opacity: .9;
+}
+
+/* Responsive adjustments */
+
+@media (max-width: 980px) {
+  .hero-art[data-hero-scene] {
+    transform: scale(.9);
+  }
+
+  .hero-status {
+    right: -5px;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero-art[data-hero-scene] {
+    height: 410px;
+    transform: none;
+    margin-top: 25px;
+  }
+
+  .hero-interface {
+    width: min(340px, 85%);
+    height: 305px;
+  }
+
+  .hero-interface .panel-heading {
+    font-size: 42px;
+  }
+
+  .hero-core {
+    transform: translate(-50%, -50%) scale(.85);
+  }
+
+  .orbit-one {
+    width: 330px;
+    margin-left: -165px;
+  }
+
+  .orbit-two {
+    width: 370px;
+    margin-left: -185px;
+  }
+
+  .orbit-three {
+    height: 350px;
+    margin-top: -175px;
+  }
+
+  .hero-status {
+    top: 5px;
+    right: 0;
+    transform: scale(.85);
+    transform-origin: right top;
+  }
+
+  .hero-art .chip-one {
+    left: -5px;
+    top: 75px;
+  }
+
+  .hero-art .chip-two {
+    right: -5px;
+    bottom: 25px;
+  }
+}
+
+/* Reduced motion accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-orbit,
+  .core-halo,
+  .core-sphere,
+  .hero-interface,
+  .hero-status,
+  .spark-three {
+    animation: none !important;
+  }
+
+  .hero-core {
+    transform: translate(-50%, -50%);
+  }
+
+  .hero-interface {
+    transform: translate(-50%, -50%);
+  }
+}
+
