@@ -54,6 +54,26 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+  // CLOSE MENU WITH ESCAPE KEY
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && nav.classList.contains("open")) {
+    nav.classList.remove("open");
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.focus();
+  }
+});
+
+// CLOSE MENU WHEN CLICKING OUTSIDE
+document.addEventListener("click", e => {
+  if (
+    nav.classList.contains("open") &&
+    !nav.contains(e.target) &&
+    !toggle.contains(e.target)
+  ) {
+    nav.classList.remove("open");
+    toggle.setAttribute("aria-expanded", "false");
+  }
+});
 
   // REVEAL ANIMATIONS
   const revealObserver = new IntersectionObserver(entries => {
