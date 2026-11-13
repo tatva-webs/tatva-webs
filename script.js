@@ -287,3 +287,76 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+// ========================================
+// TATVA WEBS — CINEMATIC HERO PARALLAX
+// ========================================
+
+document.addEventListener("DOMContentLoaded", () => {
+  const heroScene = document.querySelector("[data-hero-scene]");
+
+  if (!heroScene) return;
+
+  const reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  const finePointer = window.matchMedia(
+    "(pointer: fine)"
+  ).matches;
+
+  if (reduceMotion || !finePointer) return;
+
+  let targetX = 0;
+  let targetY = 0;
+  let currentX = 0;
+  let currentY = 0;
+  let animationFrame = null;
+
+  const animateScene = () => {
+    currentX += (targetX - currentX) * 0.12;
+    currentY += (targetY - currentY) * 0.12;
+
+    heroScene.style.setProperty("--scene-x", `${currentX}px`);
+    heroScene.style.setProperty("--scene-y", `${currentY}px`);
+
+    if (
+      Math.abs(targetX - currentX) > 0.05 ||
+      Math.abs(targetY - currentY) > 0.05
+    ) {
+      animationFrame = requestAnimationFrame(animateScene);
+    } else {
+      currentX = targetX;
+      currentY = targetY;
+
+      heroScene.style.setProperty("--scene-x", `${currentX}px`);
+      heroScene.style.setProperty("--scene-y", `${currentY}px`);
+
+      animationFrame = null;
+    }
+  };
+
+  const scheduleAnimation = () => {
+    if (!animationFrame) {
+      animationFrame = requestAnimationFrame(animateScene);
+    }
+  };
+
+  heroScene.addEventListener("pointermove", (event) => {
+    const rect = heroScene.getBoundingClientRect();
+
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    const y = (event.clientY - rect.top) / rect.height - 0.5;
+
+    targetX = x * 20;
+    targetY = y * 16;
+
+    scheduleAnimation();
+  }, { passive: true });
+
+  heroScene.addEventListener("pointerleave", () => {
+    targetX = 0;
+    targetY = 0;
+
+    scheduleAnimation();
+  });
+});
