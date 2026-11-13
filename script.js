@@ -1,8 +1,14 @@
 
 /* =========================================
-   TATVA WEBS
-   Website Interactions
-   ========================================= */
+   TATVA WEBS — MASTER INTERACTIONS
+   Shared across all 8 website pages
+========================================= */
+
+"use strict";
+
+/* =========================================
+   CONFIGURATION
+========================================= */
 
 const TATVA_CONFIG = {
   email: "hello@tatvawebs.com",
@@ -11,30 +17,34 @@ const TATVA_CONFIG = {
   linkedin: ""
 };
 
+
+/* =========================================
+   INITIALIZATION
+========================================= */
+
 document.addEventListener("DOMContentLoaded", () => {
 
+  const body = document.body;
+  const page = body.dataset.page || "home";
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   /* =========================================
-     LOADER
-     ========================================= */
+     REMOVE OLD LOADER OVERLAYS
+     Prevents the full-screen logo issue.
+  ========================================= */
 
-  const loader = document.querySelector(".loader");
-
-  window.addEventListener("load", () => {
-    document.body.classList.add("is-loaded");
-
-    if (loader) {
-      loader.classList.add("loader-hidden");
-
-      setTimeout(() => {
-        loader.remove();
-      }, 900);
-    }
+  document.querySelectorAll(
+    ".loader, .preloader, #loader, #preloader, .loading-screen"
+  ).forEach(loader => {
+    loader.classList.add("done");
+    loader.style.display = "none";
+    loader.style.pointerEvents = "none";
   });
 
 
   /* =========================================
      COPYRIGHT YEAR
-     ========================================= */
+  ========================================= */
 
   document.querySelectorAll("[data-year]").forEach(element => {
     element.textContent = new Date().getFullYear();
@@ -43,29 +53,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* =========================================
      ACTIVE NAVIGATION
-     ========================================= */
-
-  const currentPage = document.body.dataset.page;
+  ========================================= */
 
   document.querySelectorAll(".main-nav a").forEach(link => {
     const href = link.getAttribute("href");
 
-    if (
-      href &&
-      (
-        href === `${currentPage}.html` ||
-        (currentPage === "home" && href === "index.html")
-      )
-    ) {
+    if (!href) return;
+
+    const filename = href.split("/").pop().replace(".html", "");
+
+    const currentPage = page === "home" ? "index" : page;
+
+    if (filename === currentPage) {
       link.classList.add("active");
-      link.setAttribute("aria-current", "page");
     }
   });
 
 
   /* =========================================
      MOBILE NAVIGATION
-     ========================================= */
+  ========================================= */
 
   const menuToggle = document.querySelector(".menu-toggle");
   const mainNav = document.querySelector(".main-nav");
@@ -75,6 +82,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     menuToggle.classList.remove("active");
     mainNav.classList.remove("open");
+    body.classList.remove("menu-open");
+
     menuToggle.setAttribute("aria-expanded", "false");
   }
 
@@ -84,6 +93,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const isOpen = mainNav.classList.toggle("open");
 
       menuToggle.classList.toggle("active", isOpen);
+      body.classList.toggle("menu-open", isOpen);
+
       menuToggle.setAttribute("aria-expanded", String(isOpen));
     });
 
@@ -91,8 +102,13 @@ document.addEventListener("DOMContentLoaded", () => {
       link.addEventListener("click", closeMenu);
     });
 
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") closeMenu();
+    });
+
     document.addEventListener("click", event => {
       if (
+        mainNav.classList.contains("open") &&
         !mainNav.contains(event.target) &&
         !menuToggle.contains(event.target)
       ) {
@@ -100,42 +116,79 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    document.addEventListener("keydown", event => {
-      if (event.key === "Escape") {
-        closeMenu();
-      }
-    });
-
     window.addEventListener("resize", () => {
-      if (window.innerWidth > 900) {
-        closeMenu();
-      }
+      if (window.innerWidth > 900) closeMenu();
     });
   }
 
 
   /* =========================================
-     SCROLL REVEAL
-     ========================================= */
+     SCROLL PROGRESS
+  ========================================= */
+
+  let scrollTicking = false;
+
+  function updateScrollProgress() {
+    const scrollableHeight =
+      document.documentElement.scrollHeight - window.innerHeight;
+
+    const progress = scrollableHeight > 0
+      ? (window.scrollY / scrollableHeight) * 100
+      : 0;
+
+    body.style.setProperty(
+      "--scroll-progress",
+      `${Math.min(100, Math.max(0, progress))}%`
+    );
+
+    scrollTicking = false;
+  }
+
+  window.addEventListener("scroll", () => {
+    if (!scrollTicking) {
+      window.requestAnimationFrame(updateScrollProgress);
+      scrollTicking = true;
+    }
+  }, { passive: true });
+
+  updateScrollProgress();
+
+
+  /* =========================================
+     HEADER SCROLL EFFECT
+  ========================================= */
+
+  const header = document.querySelector(".site-header");
+
+  function updateHeader() {
+    if (!header) return;
+
+    header.classList.toggle("scrolled", window.scrollY > 30);
+  }
+
+  window.addEventListener("scroll", updateHeader, { passive: true });
+  updateHeader();
+
+
+  /* =========================================
+     REVEAL ANIMATIONS
+  ========================================= */
 
   const revealElements = document.querySelectorAll(".reveal");
 
-  if ("IntersectionObserver" in window) {
+  if ("IntersectionObserver" in window && !reduceMotion) {
 
-    const revealObserver = new IntersectionObserver(
-      (entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        threshold: 0.12,
-        rootMargin: "0px 0px -45px 0px"
-      }
-    );
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.12,
+      rootMargin: "0px 0px -35px 0px"
+    });
 
     revealElements.forEach(element => {
       revealObserver.observe(element);
@@ -149,54 +202,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* =========================================
-     PROCESS TIMELINE
-     ========================================= */
+     PROCESS STAGE NUMBERS
+  ========================================= */
 
-  document.querySelectorAll(".info-card").forEach((card, index) => {
-    if (document.body.dataset.page === "process") {
+  if (page === "process") {
+    document.querySelectorAll(".process-grid .info-card").forEach((card, index) => {
       card.dataset.stage = String(index + 1).padStart(2, "0");
-    }
-  });
-
-
-  /* =========================================
-     SCROLL PROGRESS
-     ========================================= */
-
-  const progressBar = document.querySelector(".scroll-progress");
-
-  function updateScrollProgress() {
-    if (!progressBar) return;
-
-    const scrollableHeight =
-      document.documentElement.scrollHeight - window.innerHeight;
-
-    const progress = scrollableHeight > 0
-      ? (window.scrollY / scrollableHeight) * 100
-      : 0;
-
-    progressBar.style.width = `${progress}%`;
+    });
   }
 
-  window.addEventListener("scroll", updateScrollProgress, {
-    passive: true
-  });
 
-  updateScrollProgress();
+  /* =========================================
+     FAQ ACCORDION
+  ========================================= */
+
+  const faqItems = document.querySelectorAll(".faq-item");
+
+  faqItems.forEach(item => {
+    item.addEventListener("toggle", () => {
+
+      if (!item.open) return;
+
+      const parent = item.closest(".faq-content");
+
+      if (!parent) return;
+
+      parent.querySelectorAll(".faq-item").forEach(otherItem => {
+        if (otherItem !== item) {
+          otherItem.open = false;
+        }
+      });
+
+    });
+  });
 
 
   /* =========================================
-     CUSTOM CURSOR
-     ========================================= */
+     ADVANCED CUSTOM CURSOR
+     Dual-layer orange cursor.
+     Works across all pages.
+  ========================================= */
 
   const cursorDot = document.querySelector(".cursor-dot");
   const cursorRing = document.querySelector(".cursor-ring");
 
-  const canUseCustomCursor =
-    window.matchMedia("(pointer: fine)").matches &&
-    window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
+  const finePointer = window.matchMedia("(pointer: fine)").matches;
 
-  if (cursorDot && cursorRing && canUseCustomCursor) {
+  if (cursorDot && cursorRing && finePointer && !reduceMotion) {
 
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
@@ -205,105 +257,113 @@ document.addEventListener("DOMContentLoaded", () => {
     let ringY = mouseY;
 
     let cursorVisible = false;
+    let cursorFrame = null;
 
-    document.addEventListener("mousemove", event => {
+    body.classList.add("custom-cursor-enabled");
+
+    function showCursor() {
+      if (cursorVisible) return;
+
+      cursorVisible = true;
+      body.classList.add("cursor-active");
+    }
+
+    function hideCursor() {
+      cursorVisible = false;
+      body.classList.remove("cursor-active");
+    }
+
+    function moveCursor(event) {
       mouseX = event.clientX;
       mouseY = event.clientY;
 
-      cursorDot.style.left = `${mouseX}px`;
-      cursorDot.style.top = `${mouseY}px`;
+      cursorDot.style.transform =
+        `translate3d(${mouseX}px, ${mouseY}px, 0)`;
 
-      if (!cursorVisible) {
-        cursorDot.classList.add("visible");
-        cursorRing.classList.add("visible");
-        cursorVisible = true;
+      showCursor();
+
+      if (!cursorFrame) {
+        cursorFrame = requestAnimationFrame(animateRing);
       }
-    });
-
-    document.addEventListener("mouseleave", () => {
-      cursorDot.classList.remove("visible");
-      cursorRing.classList.remove("visible");
-      cursorVisible = false;
-    });
-
-    document.addEventListener("mouseenter", () => {
-      cursorDot.classList.add("visible");
-      cursorRing.classList.add("visible");
-      cursorVisible = true;
-    });
-
-    function animateCursor() {
-      ringX += (mouseX - ringX) * 0.14;
-      ringY += (mouseY - ringY) * 0.14;
-
-      cursorRing.style.left = `${ringX}px`;
-      cursorRing.style.top = `${ringY}px`;
-
-      requestAnimationFrame(animateCursor);
     }
 
-    animateCursor();
+    function animateRing() {
+
+      const ease = 0.16;
+
+      ringX += (mouseX - ringX) * ease;
+      ringY += (mouseY - ringY) * ease;
+
+      cursorRing.style.transform =
+        `translate3d(${ringX}px, ${ringY}px, 0)`;
+
+      const distance = Math.hypot(
+        mouseX - ringX,
+        mouseY - ringY
+      );
+
+      if (distance > 0.15) {
+        cursorFrame = requestAnimationFrame(animateRing);
+      } else {
+        cursorFrame = null;
+      }
+    }
+
+    window.addEventListener("pointermove", moveCursor, {
+      passive: true
+    });
+
+    window.addEventListener("pointerout", event => {
+      if (!event.relatedTarget) hideCursor();
+    });
+
+    window.addEventListener("blur", hideCursor);
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) hideCursor();
+    });
+
+    /* Cursor hover states */
 
     const interactiveElements = document.querySelectorAll(
-      "a, button, input, textarea, select, .tilt-card, .project-card, summary"
+      "a, button, input, textarea, select, summary, .magnetic, .tilt-card"
     );
 
     interactiveElements.forEach(element => {
 
-      element.addEventListener("mouseenter", () => {
-        cursorDot.classList.add("cursor-hover");
-        cursorRing.classList.add("cursor-hover");
+      element.addEventListener("pointerenter", () => {
+        body.classList.add("cursor-hover");
       });
 
-      element.addEventListener("mouseleave", () => {
-        cursorDot.classList.remove("cursor-hover");
-        cursorRing.classList.remove("cursor-hover");
+      element.addEventListener("pointerleave", () => {
+        body.classList.remove("cursor-hover");
       });
 
     });
 
-    document.addEventListener("mousedown", () => {
-      cursorDot.classList.add("cursor-click");
-      cursorRing.classList.add("cursor-click");
+    /* Text selection cursor state */
+
+    document.addEventListener("selectionchange", () => {
+      body.classList.toggle(
+        "cursor-selecting",
+        Boolean(window.getSelection()?.toString())
+      );
     });
 
-    document.addEventListener("mouseup", () => {
-      cursorDot.classList.remove("cursor-click");
-      cursorRing.classList.remove("cursor-click");
-    });
-  }
-
-
-  /* =========================================
-     CURSOR REACTIVE LIGHTING
-     ========================================= */
-
-  if (canUseCustomCursor) {
-
-    document.addEventListener("mousemove", event => {
-
-      const x = (event.clientX / window.innerWidth) * 100;
-      const y = (event.clientY / window.innerHeight) * 100;
-
-      document.body.style.setProperty("--mouse-x", `${x}%`);
-      document.body.style.setProperty("--mouse-y", `${y}%`);
-
-    });
-
+  } else {
+    body.classList.remove("custom-cursor-enabled");
   }
 
 
   /* =========================================
      MAGNETIC BUTTONS
-     ========================================= */
+  ========================================= */
 
-  const magneticButtons = document.querySelectorAll(".magnetic");
+  if (finePointer && !reduceMotion) {
 
-  if (canUseCustomCursor) {
+    document.querySelectorAll(".magnetic").forEach(button => {
 
-    magneticButtons.forEach(button => {
-
-      button.addEventListener("mousemove", event => {
+      button.addEventListener("pointermove", event => {
 
         const rect = button.getBoundingClientRect();
 
@@ -311,11 +371,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const y = event.clientY - rect.top - rect.height / 2;
 
         button.style.transform =
-          `translate(${x * 0.12}px, ${y * 0.12}px)`;
+          `translate3d(${x * 0.12}px, ${y * 0.12}px, 0)`;
 
       });
 
-      button.addEventListener("mouseleave", () => {
+      button.addEventListener("pointerleave", () => {
         button.style.transform = "";
       });
 
@@ -326,15 +386,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* =========================================
      3D TILT CARDS
-     ========================================= */
+  ========================================= */
 
-  const tiltCards = document.querySelectorAll(".tilt-card");
+  if (finePointer && !reduceMotion) {
 
-  if (canUseCustomCursor) {
+    document.querySelectorAll(".tilt-card").forEach(card => {
 
-    tiltCards.forEach(card => {
-
-      card.addEventListener("mousemove", event => {
+      card.addEventListener("pointermove", event => {
 
         const rect = card.getBoundingClientRect();
 
@@ -348,14 +406,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const rotateY = ((x - centerX) / centerX) * 4;
 
         card.style.transform =
-          `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-
-        card.style.setProperty("--card-mouse-x", `${x}px`);
-        card.style.setProperty("--card-mouse-y", `${y}px`);
+          `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
 
       });
 
-      card.addEventListener("mouseleave", () => {
+      card.addEventListener("pointerleave", () => {
         card.style.transform = "";
       });
 
@@ -365,33 +420,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* =========================================
-     HERO LIGHTING
-     ========================================= */
+     HOMEPAGE HERO PARALLAX
+  ========================================= */
 
-  const heroArt = document.querySelector("[data-hero-scene]");
+  const heroScene = document.querySelector("[data-hero-scene]");
 
-  if (heroArt && canUseCustomCursor) {
+  if (heroScene && finePointer && !reduceMotion) {
 
-    heroArt.addEventListener("mousemove", event => {
+    heroScene.addEventListener("pointermove", event => {
 
-      const rect = heroArt.getBoundingClientRect();
+      const rect = heroScene.getBoundingClientRect();
 
-      const x = (event.clientX - rect.left) / rect.width;
-      const y = (event.clientY - rect.top) / rect.height;
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
 
-      heroArt.style.setProperty("--scene-x", `${(x - 0.5) * 22}px`);
-      heroArt.style.setProperty("--scene-y", `${(y - 0.5) * 22}px`);
-
-      heroArt.style.setProperty("--light-x", `${x * 100}%`);
-      heroArt.style.setProperty("--light-y", `${y * 100}%`);
+      heroScene.style.setProperty("--mouse-x", `${x * 30}px`);
+      heroScene.style.setProperty("--mouse-y", `${y * 30}px`);
 
     });
 
-    heroArt.addEventListener("mouseleave", () => {
-      heroArt.style.setProperty("--scene-x", "0px");
-      heroArt.style.setProperty("--scene-y", "0px");
-      heroArt.style.setProperty("--light-x", "50%");
-      heroArt.style.setProperty("--light-y", "50%");
+    heroScene.addEventListener("pointerleave", () => {
+      heroScene.style.setProperty("--mouse-x", "0px");
+      heroScene.style.setProperty("--mouse-y", "0px");
     });
 
   }
@@ -399,51 +449,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* =========================================
      CONTACT DETAILS
-     ========================================= */
+  ========================================= */
 
-  document.querySelectorAll("[data-contact-email]").forEach(element => {
+  document.querySelectorAll("[data-email]").forEach(element => {
     element.textContent = TATVA_CONFIG.email;
-
-    if (TATVA_CONFIG.email) {
-      element.href = `mailto:${TATVA_CONFIG.email}`;
-    }
+    element.href = `mailto:${TATVA_CONFIG.email}`;
   });
 
   document.querySelectorAll("[data-whatsapp]").forEach(element => {
-
     if (TATVA_CONFIG.whatsapp) {
-      element.href =
-        `https://wa.me/${TATVA_CONFIG.whatsapp.replace(/\D/g, "")}`;
+      element.href = `https://wa.me/${TATVA_CONFIG.whatsapp}`;
     } else {
-      element.style.display = "none";
+      element.hidden = true;
     }
-
   });
 
   document.querySelectorAll("[data-instagram]").forEach(element => {
-
     if (TATVA_CONFIG.instagram) {
       element.href = TATVA_CONFIG.instagram;
     } else {
-      element.style.display = "none";
+      element.hidden = true;
     }
-
   });
 
   document.querySelectorAll("[data-linkedin]").forEach(element => {
-
     if (TATVA_CONFIG.linkedin) {
       element.href = TATVA_CONFIG.linkedin;
     } else {
-      element.style.display = "none";
+      element.hidden = true;
     }
-
   });
 
 
   /* =========================================
      CONTACT FORM
-     ========================================= */
+     Opens the visitor's email application.
+     No backend required.
+  ========================================= */
 
   const contactForm = document.querySelector("#contact-form");
   const formNote = document.querySelector("#form-note");
@@ -451,45 +493,44 @@ document.addEventListener("DOMContentLoaded", () => {
   if (contactForm) {
 
     contactForm.addEventListener("submit", event => {
+
       event.preventDefault();
+
+      if (!contactForm.reportValidity()) return;
 
       const formData = new FormData(contactForm);
 
-      const name = formData.get("name") || "";
-      const email = formData.get("email") || "";
-      const service = formData.get("service") || "Not specified";
-      const budget = formData.get("budget") || "Not specified";
-      const message = formData.get("message") || "";
-
-      if (!name.trim() || !email.trim() || !message.trim()) {
-
-        if (formNote) {
-          formNote.textContent =
-            "Please complete all required fields.";
-        }
-
-        return;
-      }
+      const name = formData.get("name")?.toString().trim() || "";
+      const email = formData.get("email")?.toString().trim() || "";
+      const projectType = formData.get("project-type")?.toString() || "";
+      const budget = formData.get("budget")?.toString() || "Not specified";
+      const message = formData.get("message")?.toString().trim() || "";
 
       const subject = encodeURIComponent(
-        `New project enquiry from ${name}`
+        `New Project Enquiry — ${projectType}`
       );
 
-      const body = encodeURIComponent(
-        `Name: ${name}\n` +
-        `Email: ${email}\n` +
-        `Service: ${service}\n` +
-        `Budget: ${budget}\n\n` +
-        `Message:\n${message}`
-      );
+      const bodyText = [
+        "NEW PROJECT ENQUIRY",
+        "",
+        `Name: ${name}`,
+        `Email: ${email}`,
+        `Project Type: ${projectType}`,
+        `Budget: ${budget}`,
+        "",
+        "PROJECT DETAILS:",
+        message
+      ].join("\n");
+
+      const mailtoLink =
+        `mailto:${TATVA_CONFIG.email}?subject=${subject}&body=${encodeURIComponent(bodyText)}`;
 
       if (formNote) {
         formNote.textContent =
-          "Opening your email app. Please send the prepared message to complete your enquiry.";
+          "Opening your email application. Please send the prepared message to complete your enquiry.";
       }
 
-      window.location.href =
-        `mailto:${TATVA_CONFIG.email}?subject=${subject}&body=${body}`;
+      window.location.href = mailtoLink;
 
     });
 
@@ -497,204 +538,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* =========================================
-     FAQ ACCORDION
-     ========================================= */
+     BACK TO TOP
+  ========================================= */
 
-  const faqItems = document.querySelectorAll(".faq-item");
+  document.querySelectorAll(".back-top").forEach(link => {
 
-  faqItems.forEach(item => {
+    link.addEventListener("click", event => {
+      event.preventDefault();
 
-    item.addEventListener("toggle", () => {
-
-      if (!item.open) return;
-
-      faqItems.forEach(otherItem => {
-        if (otherItem !== item) {
-          otherItem.open = false;
-        }
+      window.scrollTo({
+        top: 0,
+        behavior: reduceMotion ? "auto" : "smooth"
       });
 
     });
 
   });
 
-});
 
+  /* =========================================
+     EXTERNAL LINKS
+     Open configured social links safely.
+  ========================================= */
 
-/* =========================================
-   HERO PARALLAX
-   ========================================= */
-
-document.addEventListener("DOMContentLoaded", () => {
-
-  const heroScene = document.querySelector("[data-hero-scene]");
-
-  if (!heroScene) return;
-
-  const reduceMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
-
-  const finePointer = window.matchMedia(
-    "(pointer: fine)"
-  ).matches;
-
-  if (reduceMotion || !finePointer) return;
-
-  const heroCore = heroScene.querySelector(".hero-core");
-  const heroPanel = heroScene.querySelector(".hero-interface");
-
-  heroScene.addEventListener("mousemove", event => {
-
-    const rect = heroScene.getBoundingClientRect();
-
-    const mouseX = (event.clientX - rect.left) / rect.width - 0.5;
-    const mouseY = (event.clientY - rect.top) / rect.height - 0.5;
-
-    if (heroCore) {
-      heroCore.style.setProperty(
-        "--parallax-x",
-        `${mouseX * 14}px`
-      );
-
-      heroCore.style.setProperty(
-        "--parallax-y",
-        `${mouseY * 14}px`
-      );
-    }
-
-    if (heroPanel) {
-      heroPanel.style.setProperty(
-        "--panel-x",
-        `${mouseX * -10}px`
-      );
-
-      heroPanel.style.setProperty(
-        "--panel-y",
-        `${mouseY * -10}px`
-      );
-    }
-
+  document.querySelectorAll('a[href^="mailto:"]').forEach(link => {
+    link.setAttribute("aria-label", link.getAttribute("aria-label") || "Send an email");
   });
 
-  heroScene.addEventListener("mouseleave", () => {
 
-    if (heroCore) {
-      heroCore.style.setProperty("--parallax-x", "0px");
-      heroCore.style.setProperty("--parallax-y", "0px");
-    }
+  /* =========================================
+     PAGE READY
+  ========================================= */
 
-    if (heroPanel) {
-      heroPanel.style.setProperty("--panel-x", "0px");
-      heroPanel.style.setProperty("--panel-y", "0px");
-    }
+  body.classList.add("page-loaded");
 
-  });
+  console.log(
+    `%c TATVA WEBS %c ${page.toUpperCase()} `,
+    "background:#ff6a00;color:#080808;font-weight:800;padding:7px 10px;",
+    "background:#111;color:#f5f3ef;padding:7px 10px;"
+  );
 
 });
-/* =========================================
-   TATVA WEBS — ADVANCED CURSOR ENGINE
-========================================= */
-
-(() => {
-  const finePointer = window.matchMedia("(pointer: fine)").matches;
-  const reducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
-
-  if (!finePointer || reducedMotion) return;
-
-  const dot = document.querySelector(".cursor-dot");
-  const ring = document.querySelector(".cursor-ring");
-
-  if (!dot || !ring) return;
-
-  const state = {
-    mouseX: window.innerWidth / 2,
-    mouseY: window.innerHeight / 2,
-    ringX: window.innerWidth / 2,
-    ringY: window.innerHeight / 2,
-    active: false,
-    hovering: false
-  };
-
-  const interactive = [
-    "a",
-    "button",
-    "input",
-    "textarea",
-    "select",
-    "summary",
-    "[role='button']",
-    ".magnetic",
-    ".tilt-card"
-  ].join(",");
-
-  const textFields = "input, textarea, [contenteditable='true']";
-
-  function updatePosition(element, x, y, size) {
-    element.style.transform =
-      `translate3d(${x - size / 2}px, ${y - size / 2}px, 0)`;
-  }
-
-  function animate() {
-    state.ringX += (state.mouseX - state.ringX) * 0.16;
-    state.ringY += (state.mouseY - state.ringY) * 0.16;
-
-    updatePosition(dot, state.mouseX, state.mouseY, 6);
-    updatePosition(ring, state.ringX, state.ringY, 34);
-
-    requestAnimationFrame(animate);
-  }
-
-  document.addEventListener("mousemove", (event) => {
-    state.mouseX = event.clientX;
-    state.mouseY = event.clientY;
-
-    if (!state.active) {
-      state.active = true;
-      document.body.classList.add("cursor-active");
-    }
-  });
-
-  document.addEventListener("mouseover", (event) => {
-    const target = event.target;
-
-    if (!(target instanceof Element)) return;
-
-    const isInteractive = target.closest(interactive);
-    const isText = target.closest(textFields);
-
-    document.body.classList.toggle("cursor-hover", !!isInteractive);
-    document.body.classList.toggle("cursor-text", !!isText);
-  });
-
-  document.addEventListener("mousedown", () => {
-    document.body.classList.add("cursor-click");
-  });
-
-  document.addEventListener("mouseup", () => {
-    document.body.classList.remove("cursor-click");
-  });
-
-  document.addEventListener("mouseleave", () => {
-    document.body.classList.remove("cursor-active");
-  });
-
-  document.addEventListener("mouseenter", () => {
-    if (state.active) {
-      document.body.classList.add("cursor-active");
-    }
-  });
-
-  window.addEventListener("blur", () => {
-    document.body.classList.remove(
-      "cursor-active",
-      "cursor-hover",
-      "cursor-click",
-      "cursor-text"
-    );
-  });
-
-  animate();
-})();
