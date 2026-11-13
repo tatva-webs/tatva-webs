@@ -1292,3 +1292,425 @@ summary:focus-visible {
     filter: none;
   }
 }
+
+/* =========================================
+   TATVA WEBS — ALIGNMENT + 3D UPGRADE
+========================================= */
+
+/* Remove the large orange gradient background */
+body {
+  background: #080808 !important;
+  position: relative;
+}
+
+/* HEADER: FORCE ONE HORIZONTAL ROW */
+.site-header {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 28px !important;
+  min-height: 78px !important;
+  height: 78px !important;
+  padding: 0 clamp(22px, 4vw, 65px) !important;
+  background: rgba(8,8,8,.82) !important;
+  backdrop-filter: blur(25px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(25px) saturate(160%) !important;
+}
+
+.site-header .brand {
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
+}
+
+.site-header .main-nav {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: clamp(15px, 2.5vw, 34px) !important;
+  position: static !important;
+  width: auto !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.site-header .main-nav a {
+  white-space: nowrap !important;
+  flex: 0 0 auto !important;
+}
+
+.site-header .header-cta {
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
+  display: inline-flex !important;
+  margin: 0 !important;
+}
+
+.site-header .menu-toggle {
+  display: none !important;
+}
+
+/* Keep logo at a sensible size */
+.site-header .brand img {
+  display: block;
+  width: auto !important;
+  height: 35px !important;
+  max-width: 175px !important;
+  object-fit: contain;
+}
+
+/* HERO ALIGNMENT */
+.hero-section {
+  min-height: calc(100svh - 78px) !important;
+  overflow: hidden;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+}
+
+.hero-title {
+  max-width: 780px;
+  font-size: clamp(48px, 7.5vw, 100px) !important;
+  line-height: .99 !important;
+  letter-spacing: -.075em !important;
+  overflow-wrap: normal;
+}
+
+.hero-description {
+  max-width: 570px;
+  line-height: 1.9;
+}
+
+.hero-art {
+  z-index: 2;
+}
+
+/* =========================================
+   ACTUAL 3D BACKGROUND OBJECTS
+========================================= */
+
+.ambient-3d {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 1100px;
+  transform-style: preserve-3d;
+}
+
+.ambient-object {
+  position: absolute;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Floating glass sphere */
+.ambient-sphere {
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.8), transparent 8%),
+    radial-gradient(circle at 35% 30%, rgba(255,173,66,.5), transparent 25%),
+    radial-gradient(circle at 65% 75%, rgba(255,106,0,.13), transparent 35%),
+    linear-gradient(145deg, rgba(255,255,255,.12), rgba(255,106,0,.025));
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow:
+    inset -20px -20px 45px rgba(0,0,0,.65),
+    inset 10px 10px 30px rgba(255,255,255,.08),
+    0 0 75px rgba(255,106,0,.08);
+  backdrop-filter: blur(3px);
+}
+
+/* 3D wireframe ring */
+.ambient-ring {
+  width: 280px;
+  height: 280px;
+  border: 1px solid rgba(255,173,66,.25);
+  border-radius: 50%;
+  box-shadow:
+    0 0 18px rgba(255,106,0,.06),
+    inset 0 0 18px rgba(255,106,0,.04);
+  transform: rotateX(70deg) rotateZ(-25deg);
+}
+
+.ambient-ring::before,
+.ambient-ring::after {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 50%;
+}
+
+.ambient-ring::after {
+  inset: 38px;
+  border-color: rgba(255,106,0,.16);
+}
+
+/* 3D glass cube */
+.ambient-cube {
+  width: 75px;
+  height: 75px;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 12px;
+  background: linear-gradient(
+    145deg,
+    rgba(255,255,255,.10),
+    rgba(255,106,0,.025)
+  );
+  box-shadow:
+    inset 0 0 25px rgba(255,255,255,.035),
+    0 15px 50px rgba(0,0,0,.35);
+  backdrop-filter: blur(8px);
+}
+
+.ambient-cube::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border: 1px solid rgba(255,173,66,.2);
+  border-radius: 7px;
+}
+
+/* Small glowing particles */
+.ambient-particle {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 15px 4px rgba(255,106,0,.35);
+}
+
+/* Individual positions */
+.ambient-sphere.one {
+  top: 18%;
+  right: 10%;
+  opacity: .48;
+}
+
+.ambient-sphere.two {
+  width: 85px;
+  height: 85px;
+  left: 8%;
+  bottom: 16%;
+  opacity: .34;
+}
+
+.ambient-ring.one {
+  top: 12%;
+  left: 45%;
+  opacity: .55;
+}
+
+.ambient-ring.two {
+  width: 190px;
+  height: 190px;
+  right: 7%;
+  bottom: 9%;
+  opacity: .3;
+  transform: rotateX(65deg) rotateY(35deg);
+}
+
+.ambient-cube.one {
+  top: 25%;
+  left: 7%;
+  opacity: .4;
+}
+
+.ambient-cube.two {
+  right: 24%;
+  bottom: 16%;
+  width: 48px;
+  height: 48px;
+  opacity: .32;
+}
+
+.ambient-particle.one {
+  top: 25%;
+  right: 28%;
+}
+
+.ambient-particle.two {
+  bottom: 25%;
+  left: 34%;
+}
+
+/* 3D movement */
+.ambient-sphere.one {
+  animation: ambientFloatOne 12s ease-in-out infinite;
+}
+
+.ambient-sphere.two {
+  animation: ambientFloatTwo 10s ease-in-out infinite;
+}
+
+.ambient-ring.one {
+  animation: ambientRotate 32s linear infinite;
+}
+
+.ambient-ring.two {
+  animation: ambientRotateReverse 26s linear infinite;
+}
+
+.ambient-cube.one {
+  animation: cubeFloatOne 13s ease-in-out infinite;
+}
+
+.ambient-cube.two {
+  animation: cubeFloatTwo 11s ease-in-out infinite;
+}
+
+.ambient-particle.one {
+  animation: particlePulse 3s ease-in-out infinite;
+}
+
+.ambient-particle.two {
+  animation: particlePulse 4s ease-in-out infinite reverse;
+}
+
+@keyframes ambientFloatOne {
+  0%,100% { transform: translate3d(0,0,80px) rotateY(0); }
+  50% { transform: translate3d(-35px,35px,130px) rotateY(35deg); }
+}
+
+@keyframes ambientFloatTwo {
+  0%,100% { transform: translate3d(0,0,20px); }
+  50% { transform: translate3d(25px,-35px,70px); }
+}
+
+@keyframes ambientRotate {
+  from { transform: rotateX(70deg) rotateZ(0deg); }
+  to { transform: rotateX(70deg) rotateZ(360deg); }
+}
+
+@keyframes ambientRotateReverse {
+  from { transform: rotateX(65deg) rotateY(35deg) rotateZ(360deg); }
+  to { transform: rotateX(65deg) rotateY(35deg) rotateZ(0deg); }
+}
+
+@keyframes cubeFloatOne {
+  0%,100% { transform: translate3d(0,0,0) rotateX(15deg) rotateY(25deg); }
+  50% { transform: translate3d(25px,-35px,70px) rotateX(70deg) rotateY(150deg); }
+}
+
+@keyframes cubeFloatTwo {
+  0%,100% { transform: translate3d(0,0,0) rotateX(0) rotateY(0); }
+  50% { transform: translate3d(-25px,20px,40px) rotateX(80deg) rotateY(100deg); }
+}
+
+@keyframes particlePulse {
+  0%,100% { opacity: .35; transform: scale(.7); }
+  50% { opacity: 1; transform: scale(1.5); }
+}
+
+/* Cursor: eliminate the excessive lag */
+@media (pointer: fine) {
+  .cursor-dot {
+    z-index: 100002 !important;
+  }
+
+  .cursor-ring {
+    z-index: 100001 !important;
+    transition:
+      width .22s ease,
+      height .22s ease,
+      border-color .22s ease,
+      background .22s ease,
+      opacity .15s ease !important;
+  }
+}
+
+/* Mobile layout */
+@media (max-width: 900px) {
+  .site-header {
+    gap: 15px !important;
+  }
+
+  .site-header .main-nav {
+    gap: 13px !important;
+  }
+
+  .site-header .main-nav a {
+    font-size: 10px !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .site-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    height: 72px !important;
+    min-height: 72px !important;
+  }
+
+  .site-header .menu-toggle {
+    display: grid !important;
+    place-items: center !important;
+    flex: 0 0 42px !important;
+  }
+
+  .site-header .main-nav {
+    position: absolute !important;
+    top: calc(100% + 1px) !important;
+    left: 12px !important;
+    right: 12px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+    padding: 12px !important;
+    border: 1px solid var(--line) !important;
+    border-radius: 18px !important;
+    background: rgba(12,12,12,.96) !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: translateY(-10px) !important;
+    transition: .35s ease !important;
+  }
+
+  .site-header .main-nav.open {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+  }
+
+  .site-header .main-nav a {
+    padding: 14px !important;
+    font-size: 13px !important;
+  }
+
+  .site-header .header-cta {
+    display: none !important;
+  }
+
+  .ambient-sphere.one {
+    right: -80px;
+  }
+
+  .ambient-ring.one {
+    left: 25%;
+  }
+
+  .ambient-cube.one {
+    left: -25px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-object {
+    animation: none !important;
+  }
+}
