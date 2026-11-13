@@ -1,5 +1,9 @@
 
-// TATVA WEBS — editable business settings
+/* =========================================
+   TATVA WEBS — MAIN INTERACTIONS
+   Shared across all website pages
+========================================= */
+
 const TATVA_CONFIG = {
   email: "hello@tatvawebs.com",
   whatsapp: "",
@@ -8,86 +12,142 @@ const TATVA_CONFIG = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+  const body = document.body;
+  const page = body.dataset.page || "home";
+  const reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+  const finePointer = window.matchMedia(
+    "(hover: hover) and (pointer: fine)"
+  ).matches;
 
-  // LOADER
+  /* -----------------------------------------
+     LOADER
+  ----------------------------------------- */
+
   const loader = document.querySelector(".loader");
 
+  const hideLoader = () => {
+    if (loader) loader.classList.add("done");
+  };
+
   if (loader) {
-    window.addEventListener("load", () => {
-      setTimeout(() => loader.classList.add("done"), 550);
-    });
+    if (document.readyState === "complete") {
+      hideLoader();
+    } else {
+      window.addEventListener("load", hideLoader, { once: true });
+    }
+
+    // Safety fallback if a resource takes too long.
+    window.setTimeout(hideLoader, 3500);
   }
 
-  // COPYRIGHT YEAR
-  document.querySelectorAll("[data-year]").forEach(el => {
-    el.textContent = new Date().getFullYear();
+  /* -----------------------------------------
+     COPYRIGHT YEAR
+  ----------------------------------------- */
+
+  document.querySelectorAll("[data-year]").forEach(element => {
+    element.textContent = new Date().getFullYear();
   });
 
-  // ACTIVE NAVIGATION
-  const page = document.body.dataset.page;
+  /* -----------------------------------------
+     ACTIVE NAVIGATION
+  ----------------------------------------- */
 
-  document.querySelectorAll(".main-nav a").forEach(a => {
-    const target = a.getAttribute("href").replace(".html", "");
+  document.querySelectorAll(".main-nav a").forEach(link => {
+    const href = link.getAttribute("href") || "";
+    const target = href.split("/").pop().replace(".html", "");
 
-    if (
-      (page === "home" && target === "index") ||
-      target === page
-    ) {
-      a.classList.add("active");
+    const isActive =
+      (page === "home" && (target === "index" || target === "")) ||
+      target === page;
+
+    link.classList.toggle("active", isActive);
+
+    if (isActive) {
+      link.setAttribute("aria-current", "page");
+    } else {
+      link.removeAttribute("aria-current");
     }
   });
 
-  // MOBILE NAVIGATION
+  /* -----------------------------------------
+     MOBILE NAVIGATION
+  ----------------------------------------- */
+
   const toggle = document.querySelector(".menu-toggle");
   const nav = document.querySelector(".main-nav");
 
+  const closeMenu = () => {
+    if (!toggle || !nav) return;
+
+    nav.classList.remove("open");
+    toggle.setAttribute("aria-expanded", "false");
+  };
+
   if (toggle && nav) {
     toggle.addEventListener("click", () => {
-      const open = nav.classList.toggle("open");
-      toggle.setAttribute("aria-expanded", String(open));
+      const isOpen = nav.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", String(isOpen));
     });
 
-    nav.querySelectorAll("a").forEach(a => {
-      a.addEventListener("click", () => {
-        nav.classList.remove("open");
-        toggle.setAttribute("aria-expanded", "false");
-      });
+    nav.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", closeMenu);
     });
-  }
-  // CLOSE MENU WITH ESCAPE KEY
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape" && nav.classList.contains("open")) {
-    nav.classList.remove("open");
-    toggle.setAttribute("aria-expanded", "false");
-    toggle.focus();
-  }
-});
 
-// CLOSE MENU WHEN CLICKING OUTSIDE
-document.addEventListener("click", e => {
-  if (
-    nav.classList.contains("open") &&
-    !nav.contains(e.target) &&
-    !toggle.contains(e.target)
-  ) {
-    nav.classList.remove("open");
-    toggle.setAttribute("aria-expanded", "false");
-  }
-});
-
-  // REVEAL ANIMATIONS
-  const revealObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("visible");
-        revealObserver.unobserve(entry.target);
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && nav.classList.contains("open")) {
+        closeMenu();
+        toggle.focus();
       }
     });
-  }, { threshold: 0.12 });
 
-  document.querySelectorAll(".reveal").forEach(el => {
-    revealObserver.observe(el);
-  });
+    document.addEventListener("click", event => {
+      if (
+        nav.classList.contains("open") &&
+        !nav.contains(event.target) &&
+        !toggle.contains(event.target)
+      ) {
+        closeMenu();
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 760) closeMenu();
+    });
+  }
+
+  /* -----------------------------------------
+     SCROLL REVEAL
+  ----------------------------------------- */
+
+  const revealElements = document.querySelectorAll(".reveal");
+
+  if (reduceMotion || !("IntersectionObserver" in window)) {
+    revealElements.forEach(element => {
+      element.classList.add("visible");
+    });
+  } else {
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.12,
+      rootMargin: "0px 0px -35px 0px"
+    });
+
+    revealElements.forEach(element => {
+      revealObserver.observe(element);
+    });
+  }
+
+  /* -----------------------------------------
+     PROCESS PAGE NUMBERING
+  ----------------------------------------- */
 
   if (page === "process") {
     document.querySelectorAll(".info-card").forEach((card, index) => {
@@ -98,78 +158,89 @@ document.addEventListener("click", e => {
     });
   }
 
-  // SCROLL PROGRESS
+  /* -----------------------------------------
+     SCROLL PROGRESS
+  ----------------------------------------- */
+
   const progress = document.querySelector(".scroll-progress");
+  let scrollTicking = false;
 
   const updateProgress = () => {
-    const max = document.documentElement.scrollHeight - window.innerHeight;
+    if (!progress) return;
 
-    if (progress) {
-      progress.style.width =
-        (max > 0 ? window.scrollY / max * 100 : 0) + "%";
-    }
+    const scrollable =
+      document.documentElement.scrollHeight - window.innerHeight;
+
+    const percentage = scrollable > 0
+      ? (window.scrollY / scrollable) * 100
+      : 0;
+
+    progress.style.width = `${percentage}%`;
+    scrollTicking = false;
   };
 
-  window.addEventListener("scroll", updateProgress, { passive: true });
+  window.addEventListener("scroll", () => {
+    if (!scrollTicking) {
+      requestAnimationFrame(updateProgress);
+      scrollTicking = true;
+    }
+  }, { passive: true });
+
   updateProgress();
 
-  // DESKTOP CURSOR
+  /* -----------------------------------------
+     DESKTOP CURSOR
+  ----------------------------------------- */
+
   const dot = document.querySelector(".cursor-dot");
   const ring = document.querySelector(".cursor-ring");
 
-  if (window.matchMedia("(pointer: fine)").matches) {
+  if (finePointer && !reduceMotion) {
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let ringX = mouseX;
+    let ringY = mouseY;
 
-    let x = innerWidth / 2;
-    let y = innerHeight / 2;
-    let rx = x;
-    let ry = y;
-
-    // INSTANT DOT MOVEMENT
-    document.addEventListener("mousemove", e => {
-      x = e.clientX;
-      y = e.clientY;
+    document.addEventListener("mousemove", event => {
+      mouseX = event.clientX;
+      mouseY = event.clientY;
 
       if (dot) {
+        dot.style.left = `${mouseX}px`;
+        dot.style.top = `${mouseY}px`;
         dot.style.opacity = "1";
-        dot.style.left = x + "px";
-        dot.style.top = y + "px";
       }
 
-      if (ring) {
-        ring.style.opacity = "1";
-      }
+      if (ring) ring.style.opacity = "1";
+
+      body.style.setProperty("--cursor-x", `${mouseX}px`);
+      body.style.setProperty("--cursor-y", `${mouseY}px`);
     }, { passive: true });
 
-    // FASTER AND SMOOTHER RING
-    const follow = () => {
-
-      rx += (x - rx) * 0.38;
-      ry += (y - ry) * 0.38;
+    const followCursor = () => {
+      ringX += (mouseX - ringX) * 0.32;
+      ringY += (mouseY - ringY) * 0.32;
 
       if (ring) {
-        ring.style.left = rx + "px";
-        ring.style.top = ry + "px";
+        ring.style.left = `${ringX}px`;
+        ring.style.top = `${ringY}px`;
       }
 
-      requestAnimationFrame(follow);
+      requestAnimationFrame(followCursor);
     };
 
-    follow();
+    if (ring) requestAnimationFrame(followCursor);
 
-    // CURSOR HOVER EFFECT
-    document.querySelectorAll("a, button, summary").forEach(el => {
-
-      el.addEventListener("mouseenter", () => {
+    document.querySelectorAll("a, button, summary").forEach(element => {
+      element.addEventListener("mouseenter", () => {
         ring?.classList.add("hover");
       });
 
-      el.addEventListener("mouseleave", () => {
+      element.addEventListener("mouseleave", () => {
         ring?.classList.remove("hover");
       });
-
     });
 
-    // CLICK EFFECT
     document.addEventListener("mousedown", () => {
       if (ring) {
         ring.style.width = "22px";
@@ -184,132 +255,162 @@ document.addEventListener("click", e => {
       }
     });
 
-    // MAGNETIC BUTTONS
-    document.querySelectorAll(".magnetic").forEach(el => {
+    /* -----------------------------------------
+       MAGNETIC BUTTONS
+    ----------------------------------------- */
 
-      el.addEventListener("mousemove", e => {
+    if (!reduceMotion) {
+      document.querySelectorAll(".magnetic").forEach(element => {
+        element.addEventListener("mousemove", event => {
+          const rect = element.getBoundingClientRect();
 
-        const r = el.getBoundingClientRect();
+          const dx = event.clientX - (rect.left + rect.width / 2);
+          const dy = event.clientY - (rect.top + rect.height / 2);
 
-        const dx = e.clientX - (r.left + r.width / 2);
-        const dy = e.clientY - (r.top + r.height / 2);
+          element.style.transform =
+            `translate(${dx * 0.10}px, ${dy * 0.14}px)`;
+        });
 
-        el.style.transform =
-          `translate(${dx * 0.12}px, ${dy * 0.18}px)`;
-
+        element.addEventListener("mouseleave", () => {
+          element.style.transform = "";
+        });
       });
 
-      el.addEventListener("mouseleave", () => {
-        el.style.transform = "";
+      /* -----------------------------------------
+         3D TILT CARDS
+      ----------------------------------------- */
+
+      document.querySelectorAll(".tilt-card").forEach(card => {
+        card.addEventListener("mousemove", event => {
+          const rect = card.getBoundingClientRect();
+
+          const px = (event.clientX - rect.left) / rect.width;
+          const py = (event.clientY - rect.top) / rect.height;
+
+          const rotateX = (0.5 - py) * 5;
+          const rotateY = (px - 0.5) * 7;
+
+          card.style.transform =
+            `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-3px)`;
+
+          card.style.setProperty("--mx", `${px * 100}%`);
+          card.style.setProperty("--my", `${py * 100}%`);
+        });
+
+        card.addEventListener("mouseleave", () => {
+          card.style.transform = "";
+        });
       });
+    }
 
-    });
+    /* -----------------------------------------
+       HERO LIGHTING
+    ----------------------------------------- */
 
-    // 3D TILT CARDS
-    document.querySelectorAll(".tilt-card").forEach(card => {
+    const heroArt = document.querySelector(".hero-art");
 
-      card.addEventListener("mousemove", e => {
+    if (heroArt) {
+      heroArt.addEventListener("pointermove", event => {
+        const rect = heroArt.getBoundingClientRect();
 
-        const r = card.getBoundingClientRect();
-
-        const px = (e.clientX - r.left) / r.width;
-        const py = (e.clientY - r.top) / r.height;
-
-        card.style.transform =
-          `perspective(900px) rotateX(${(0.5 - py) * 5}deg) rotateY(${(px - 0.5) * 7}deg) translateY(-3px)`;
-
-        card.style.setProperty("--mx", `${px * 100}%`);
-        card.style.setProperty("--my", `${py * 100}%`);
-
-      });
-
-      card.addEventListener("mouseleave", () => {
-        card.style.transform = "";
-      });
-
-    });
-
-    // HERO CURSOR GLOW
-    const art = document.querySelector(".hero-art");
-
-    if (art) {
-
-      art.addEventListener("mousemove", e => {
-
-        const r = art.getBoundingClientRect();
-
-        art.style.setProperty(
+        heroArt.style.setProperty(
           "--spot-x",
-          `${e.clientX - r.left}px`
+          `${event.clientX - rect.left}px`
         );
 
-        art.style.setProperty(
+        heroArt.style.setProperty(
           "--spot-y",
-          `${e.clientY - r.top}px`
+          `${event.clientY - rect.top}px`
         );
-
-      });
-
+      }, { passive: true });
     }
   }
 
-  // CONTACT DETAILS
-  document.querySelectorAll("[data-email]").forEach(el => {
-    el.textContent = TATVA_CONFIG.email;
+  /* -----------------------------------------
+     CONTACT DETAILS
+  ----------------------------------------- */
+
+  document.querySelectorAll("[data-email]").forEach(element => {
+    element.textContent = TATVA_CONFIG.email;
   });
 
-  document.querySelectorAll("[data-email-link]").forEach(el => {
-    el.href = "mailto:" + TATVA_CONFIG.email;
+  document.querySelectorAll("[data-email-link]").forEach(element => {
+    element.href = `mailto:${TATVA_CONFIG.email}`;
   });
 
-  document.querySelectorAll("[data-whatsapp]").forEach(el => {
+  document.querySelectorAll("[data-whatsapp]").forEach(element => {
     if (TATVA_CONFIG.whatsapp) {
-      el.textContent = "Chat with us";
-      el.href = "https://wa.me/" + TATVA_CONFIG.whatsapp;
+      element.textContent = "Chat with us";
+      element.href = `https://wa.me/${TATVA_CONFIG.whatsapp}`;
+      element.target = "_blank";
+      element.rel = "noopener noreferrer";
     }
   });
 
-  // CONTACT FORM
+  /* -----------------------------------------
+     CONTACT FORM
+  ----------------------------------------- */
+
   const form = document.getElementById("contact-form");
 
   if (form) {
+    form.addEventListener("submit", event => {
+      event.preventDefault();
 
-    form.addEventListener("submit", e => {
-
-      e.preventDefault();
+      if (!form.reportValidity()) return;
 
       const data = new FormData(form);
 
       const subject = encodeURIComponent(
-        "Tatva Webs project enquiry — " + data.get("name")
+        `Tatva Webs project enquiry — ${data.get("name") || ""}`
       );
 
-      const body = encodeURIComponent(
-        `Name: ${data.get("name")}\n` +
-        `Email: ${data.get("email")}\n` +
-        `Company: ${data.get("company")}\n` +
-        `Project type: ${data.get("project")}\n\n` +
-        `Project details:\n${data.get("details")}`
-      );
+      const bodyText = [
+        `Name: ${data.get("name") || ""}`,
+        `Email: ${data.get("email") || ""}`,
+        `Company: ${data.get("company") || ""}`,
+        `Project type: ${data.get("project") || ""}`,
+        "",
+        "Project details:",
+        data.get("details") || ""
+      ].join("\n");
 
-      window.location.href =
-        `mailto:${TATVA_CONFIG.email}?subject=${subject}&body=${body}`;
+      const mailto =
+        `mailto:${TATVA_CONFIG.email}?subject=${subject}&body=${encodeURIComponent(bodyText)}`;
 
       const note = document.getElementById("form-note");
 
       if (note) {
         note.textContent =
-          "Your email app should open with the enquiry prepared. Please send it from your email app to complete the enquiry.";
+          "Your email app should open with the enquiry prepared. Send the email to complete your enquiry.";
       }
 
+      window.location.href = mailto;
     });
-
   }
 
+  /* -----------------------------------------
+     FAQ ACCORDION
+     Allows one open item at a time
+  ----------------------------------------- */
+
+  const faqItems = document.querySelectorAll(".faq-item");
+
+  faqItems.forEach(item => {
+    item.addEventListener("toggle", () => {
+      if (!item.open) return;
+
+      faqItems.forEach(otherItem => {
+        if (otherItem !== item) otherItem.open = false;
+      });
+    });
+  });
+
 });
-// ========================================
-// TATVA WEBS — CINEMATIC HERO PARALLAX
-// ========================================
+
+/* =========================================
+   TATVA WEBS — CINEMATIC HERO PARALLAX
+========================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
   const heroScene = document.querySelector("[data-hero-scene]");
@@ -321,7 +422,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ).matches;
 
   const finePointer = window.matchMedia(
-    "(pointer: fine)"
+    "(hover: hover) and (pointer: fine)"
   ).matches;
 
   if (reduceMotion || !finePointer) return;
@@ -347,10 +448,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       currentX = targetX;
       currentY = targetY;
-
-      heroScene.style.setProperty("--scene-x", `${currentX}px`);
-      heroScene.style.setProperty("--scene-y", `${currentY}px`);
-
       animationFrame = null;
     }
   };
@@ -361,7 +458,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  heroScene.addEventListener("pointermove", (event) => {
+  heroScene.addEventListener("pointermove", event => {
     const rect = heroScene.getBoundingClientRect();
 
     const x = (event.clientX - rect.left) / rect.width - 0.5;
@@ -376,7 +473,6 @@ document.addEventListener("DOMContentLoaded", () => {
   heroScene.addEventListener("pointerleave", () => {
     targetX = 0;
     targetY = 0;
-
     scheduleAnimation();
   });
 });
