@@ -2061,3 +2061,117 @@ select:focus {
   }
 }
 
+/* =========================================
+   TATVA WEBS — INTERACTIVE HOVER SYSTEM
+========================================= */
+
+/* CARD BASE */
+.service-card,
+.feature-card,
+.project-card,
+.stat-card {
+  position: relative;
+  isolation: isolate;
+  transition:
+    border-color .35s ease,
+    box-shadow .35s ease,
+    background .35s ease;
+}
+
+/* MOVING LIGHT REFLECTION */
+.service-card::after,
+.feature-card::after,
+.project-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    circle at 50% 0%,
+    rgba(0, 217, 255, .13),
+    transparent 65%
+  );
+  transition: opacity .4s ease;
+}
+
+.service-card:hover::after,
+.feature-card:hover::after,
+.project-card:hover::after {
+  opacity: 1;
+}
+
+/* CYAN EDGE LIGHT */
+.service-card:hover,
+.feature-card:hover,
+.project-card:hover,
+.stat-card:hover {
+  border-color: rgba(0, 217, 255, .45);
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, .25),
+    0 0 24px rgba(0, 217, 255, .08);
+}
+
+/* CARD ICON */
+.card-icon {
+  transition:
+    color .35s ease,
+    border-color .35s ease,
+    box-shadow .35s ease;
+}
+
+.service-card:hover .card-icon,
+.feature-card:hover .card-icon {
+  color: #8CEBFF;
+  border-color: #00D9FF;
+  box-shadow: 0 0 20px rgba(0, 217, 255, .13);
+}
+
+/* PROJECT IMAGE */
+.project-visual {
+  overflow: hidden;
+}
+
+.project-visual::before {
+  transition: transform .8s ease;
+}
+
+.project-card:hover .project-visual::before {
+  transform: scale(1.04);
+}
+
+/* BUTTON FEEDBACK */
+.button {
+  transition:
+    box-shadow .3s ease,
+    border-color .3s ease,
+    background .3s ease,
+    color .3s ease;
+}
+
+.button:hover {
+  box-shadow: 0 0 25px rgba(0, 217, 255, .18);
+}
+
+.button span {
+  display: inline-block;
+  transition: transform .3s ease;
+}
+
+.button:hover span {
+  transform: translate(3px, -3px);
+}
+
+/* ACCESSIBILITY */
+@media (prefers-reduced-motion: reduce) {
+  .service-card,
+  .feature-card,
+  .project-card,
+  .stat-card,
+  .button,
+  .card-icon {
+    transition: none !important;
+  }
+}
+
