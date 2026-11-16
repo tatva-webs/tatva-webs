@@ -1,14 +1,7 @@
-
-/* =========================================================
+/* =========================================
    TATVA WEBS — ADVANCED INTERACTIONS
-   MIDNIGHT BLUE × ELECTRIC CYAN
-========================================================= */
-
-"use strict";
-
-/* =========================
-   CONFIGURATION
-========================= */
+   MIDNIGHT CYAN EDITION
+========================================= */
 
 const TATVA_CONFIG = {
   email: "tatvawebs@gmail.com",
@@ -18,108 +11,68 @@ const TATVA_CONFIG = {
   logo: "tatva-webs-logo.png"
 };
 
-/* =========================
-   HELPERS
-========================= */
-
-const $ = (selector, parent = document) =>
-  parent.querySelector(selector);
-
-const $$ = (selector, parent = document) =>
-  [...parent.querySelectorAll(selector)];
-
-const prefersReducedMotion = window.matchMedia(
-  "(prefers-reduced-motion: reduce)"
-).matches;
-
-const hasFinePointer = window.matchMedia(
-  "(pointer: fine)"
-).matches;
-
-const clamp = (value, min, max) =>
-  Math.min(Math.max(value, min), max);
-
-/* =========================
-   MAIN INITIALIZATION
-========================= */
-
 document.addEventListener("DOMContentLoaded", () => {
-  document.documentElement.classList.add("js-enabled");
+  "use strict";
+
+  /* =========================================
+     HELPERS
+  ========================================= */
+
+  const $ = (selector, parent = document) =>
+    parent.querySelector(selector);
+
+  const $$ = (selector, parent = document) =>
+    [...parent.querySelectorAll(selector)];
+
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  const finePointer = window.matchMedia(
+    "(pointer: fine)"
+  ).matches;
+
+  const isMobile = () => window.innerWidth <= 850;
+
+  /* =========================================
+     GLOBAL SETTINGS
+  ========================================= */
 
   document.documentElement.style.setProperty(
     "--accent",
     "#00D9FF"
   );
 
-  initializeYear();
-  initializeFavicon();
-  initializeSocialLinks();
-  initializePreloader();
-  initializeAmbientBackground();
-  initializeMobileNavigation();
-  initializeActiveNavigation();
-  initializeScrollEffects();
-  initializeRevealAnimations();
-  initializeStaggerAnimations();
-  initializeFAQ();
-  initializeContactForm();
-  initializeBackToTop();
-  initializeImageEffects();
-  initializeSmoothScrolling();
-  initializePageTransitions();
-
-  if (!prefersReducedMotion) {
-    initializeHeroParallax();
-    initializeMagneticButtons();
-    initializeTiltCards();
-
-    if (hasFinePointer) {
-      initializeCustomCursor();
-    }
-  }
-
-  console.log(
-    "%c TATVA WEBS ",
-    "background:#00D9FF;color:#070B18;font-weight:900;padding:8px 14px;border-radius:5px;"
-  );
-
-  console.log(
-    "%cDigital experiences. Built with purpose.",
-    "color:#8CEBFF;font-size:12px;"
-  );
-});
-
-/* =========================
-   CURRENT YEAR
-========================= */
-
-function initializeYear() {
-  $$("[data-year], #year, .current-year").forEach(element => {
+  $$("[data-year], .current-year").forEach(element => {
     element.textContent = new Date().getFullYear();
   });
-}
 
-/* =========================
-   FAVICON
-========================= */
+  /* =========================================
+     LOGO + FAVICON
+  ========================================= */
 
-function initializeFavicon() {
-  if ($('link[rel="icon"]')) return;
+  const favicon = document.querySelector(
+    'link[rel="icon"]'
+  );
 
-  const favicon = document.createElement("link");
+  if (favicon) {
+    favicon.href = TATVA_CONFIG.logo;
+  } else {
+    const icon = document.createElement("link");
+    icon.rel = "icon";
+    icon.type = "image/png";
+    icon.href = TATVA_CONFIG.logo;
+    document.head.appendChild(icon);
+  }
 
-  favicon.rel = "icon";
-  favicon.type = "image/png";
-  favicon.href = TATVA_CONFIG.logo;
+  $$("[data-logo]").forEach(image => {
+    image.src = TATVA_CONFIG.logo;
+  });
 
-  document.head.appendChild(favicon);
-}
+  /* =========================================
+     SOCIAL LINKS
+  ========================================= */
 
-/* =========================
-   SOCIAL LINKS
-========================= */
-
-function initializeSocialLinks() {
   $$("[data-instagram]").forEach(link => {
     link.href = TATVA_CONFIG.instagram;
     link.target = "_blank";
@@ -133,46 +86,38 @@ function initializeSocialLinks() {
   $$("[data-whatsapp]").forEach(link => {
     if (TATVA_CONFIG.whatsapp) {
       link.href = TATVA_CONFIG.whatsapp;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
+    } else {
+      link.style.display = "none";
     }
   });
 
   $$("[data-linkedin]").forEach(link => {
     if (TATVA_CONFIG.linkedin) {
       link.href = TATVA_CONFIG.linkedin;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
+    } else {
+      link.style.display = "none";
     }
   });
-}
 
-/* =========================
-   PRELOADER
-========================= */
+  /* =========================================
+     PRELOADER — SAFE SINGLE EXECUTION
+  ========================================= */
 
-function initializePreloader() {
-  const loader = $(
-    ".preloader, #preloader, .page-loader"
-  );
-
+  const preloader = $(".site-preloader");
   let loaderRemoved = false;
 
   function removeLoader() {
-    if (loaderRemoved) return;
+    if (loaderRemoved || !preloader) return;
 
     loaderRemoved = true;
 
-    document.body.classList.add("loaded");
-    document.documentElement.classList.add("page-loaded");
+    preloader.classList.add("is-hidden");
 
-    if (!loader) return;
-
-    loader.classList.add("loaded");
+    document.body.classList.add("page-loaded");
 
     window.setTimeout(() => {
-      loader.remove();
-    }, 700);
+      preloader.remove();
+    }, 900);
   }
 
   if (document.readyState === "complete") {
@@ -181,130 +126,136 @@ function initializePreloader() {
     window.addEventListener("load", removeLoader, {
       once: true
     });
+
+    // Fallback if the load event takes too long.
+    window.setTimeout(removeLoader, 4500);
   }
 
-  // Fallback if the load event takes too long.
-  window.setTimeout(removeLoader, 4500);
-}
+  /* =========================================
+     AMBIENT BACKGROUND
+  ========================================= */
 
-/* =========================
-   AMBIENT BACKGROUND
-========================= */
+  const ambientContainer = $(".ambient-3d");
 
-function initializeAmbientBackground() {
-  const ambient = $(".ambient-3d");
+  if (ambientContainer && !$(".ambient-object", ambientContainer)) {
+    const ambientObjects = [
+      ["sphere", "one"],
+      ["cube", "two"],
+      ["ring", "three"],
+      ["orb-small", "four"],
+      ["sphere", "five"],
+      ["cube", "six"]
+    ];
 
-  if (!ambient || ambient.dataset.initialized === "true") {
-    return;
+    ambientObjects.forEach(([type, position]) => {
+      const object = document.createElement("div");
+
+      object.className =
+        `ambient-object ${type} ${position}`;
+
+      ambientContainer.appendChild(object);
+    });
   }
 
-  ambient.dataset.initialized = "true";
+  /* =========================================
+     MOBILE NAVIGATION
+  ========================================= */
 
-  const fragment = document.createDocumentFragment();
-
-  for (let i = 0; i < 3; i++) {
-    const orb = document.createElement("div");
-
-    orb.className = `ambient-orb ambient-orb-${i + 1}`;
-
-    fragment.appendChild(orb);
-  }
-
-  ambient.appendChild(fragment);
-}
-
-/* =========================
-   MOBILE NAVIGATION
-========================= */
-
-function initializeMobileNavigation() {
-  const toggle = $(
+  const menuToggle = $(
     ".menu-toggle, .nav-toggle, [data-menu-toggle]"
   );
 
-  const navigation = $(
+  const mainNav = $(
     ".main-nav, .nav-links, #main-navigation"
   );
 
-  if (!toggle || !navigation) return;
+  function closeMobileMenu() {
+    if (!mainNav || !menuToggle) return;
 
-  toggle.setAttribute("aria-controls", navigation.id || "main-navigation");
-  navigation.id ||= "main-navigation";
+    mainNav.classList.remove("open", "active");
 
-  function setMenuState(open) {
-    toggle.classList.toggle("active", open);
-    navigation.classList.toggle("active", open);
-    navigation.classList.toggle("open", open);
+    menuToggle.classList.remove("active");
 
-    toggle.setAttribute("aria-expanded", String(open));
+    menuToggle.setAttribute("aria-expanded", "false");
 
-    document.body.classList.toggle("menu-open", open);
+    document.body.classList.remove("menu-open");
   }
 
-  toggle.addEventListener("click", event => {
-    event.stopPropagation();
+  function toggleMobileMenu() {
+    if (!mainNav || !menuToggle) return;
 
-    const isOpen =
-      toggle.getAttribute("aria-expanded") === "true";
+    const isOpen = mainNav.classList.contains("open");
 
-    setMenuState(!isOpen);
-  });
+    mainNav.classList.toggle("open", !isOpen);
 
-  $$(".main-nav a, .nav-links a, #main-navigation a").forEach(link => {
-    link.addEventListener("click", () => {
-      setMenuState(false);
+    menuToggle.classList.toggle("active", !isOpen);
+
+    menuToggle.setAttribute(
+      "aria-expanded",
+      String(!isOpen)
+    );
+
+    document.body.classList.toggle(
+      "menu-open",
+      !isOpen
+    );
+  }
+
+  if (menuToggle && mainNav) {
+    menuToggle.setAttribute("aria-expanded", "false");
+
+    menuToggle.addEventListener("click", event => {
+      event.stopPropagation();
+      toggleMobileMenu();
     });
-  });
 
-  document.addEventListener("click", event => {
-    if (
-      !navigation.contains(event.target) &&
-      !toggle.contains(event.target)
-    ) {
-      setMenuState(false);
-    }
-  });
+    mainNav.addEventListener("click", event => {
+      if (event.target.closest("a")) {
+        closeMobileMenu();
+      }
+    });
 
-  document.addEventListener("keydown", event => {
-    if (event.key === "Escape") {
-      setMenuState(false);
-      toggle.focus();
-    }
-  });
+    document.addEventListener("click", event => {
+      if (
+        !mainNav.contains(event.target) &&
+        !menuToggle.contains(event.target)
+      ) {
+        closeMobileMenu();
+      }
+    });
 
-  window.addEventListener("resize", () => {
-    if (window.innerWidth > 850) {
-      setMenuState(false);
-    }
-  });
-}
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        closeMobileMenu();
+      }
+    });
 
-/* =========================
-   ACTIVE NAVIGATION
-========================= */
+    window.addEventListener("resize", () => {
+      if (!isMobile()) {
+        closeMobileMenu();
+      }
+    });
+  }
 
-function initializeActiveNavigation() {
-  const currentPath = window.location.pathname
+  /* =========================================
+     ACTIVE NAVIGATION
+  ========================================= */
+
+  const currentPage = window.location.pathname
     .split("/")
     .pop()
-    .toLowerCase();
+    .toLowerCase() || "index.html";
 
-  const currentPage = currentPath || "index.html";
-
-  $$("nav a, .main-nav a, .nav-links a").forEach(link => {
+  $$(".main-nav a, .nav-links a").forEach(link => {
     const href = link.getAttribute("href");
 
-    if (!href || href.startsWith("#")) return;
+    if (!href) return;
 
     try {
-      const linkURL = new URL(href, window.location.href);
-
-      if (linkURL.origin !== window.location.origin) return;
-
-      const linkPage = linkURL.pathname
-        .split("/")
-        .pop()
-        .toLowerCase() || "index.html";
+      const linkPage = new URL(
+        href,
+        window.location.href
+      ).pathname.split("/").pop().toLowerCase();
 
       const isActive = linkPage === currentPage;
 
@@ -316,17 +267,15 @@ function initializeActiveNavigation() {
         link.removeAttribute("aria-current");
       }
     } catch {
-      // Ignore invalid URLs.
+      // Ignore invalid navigation URLs.
     }
   });
-}
 
-/* =========================
-   SCROLL PROGRESS + HEADER
-========================= */
+  /* =========================================
+     SCROLL PROGRESS + HEADER
+  ========================================= */
 
-function initializeScrollEffects() {
-  const progress = $(
+  const scrollProgress = $(
     ".scroll-progress, #scroll-progress"
   );
 
@@ -334,622 +283,578 @@ function initializeScrollEffects() {
     ".site-header, header"
   );
 
-  let ticking = false;
+  let scrollTicking = false;
 
-  function updateScroll() {
-    const scrollTop =
-      window.scrollY ||
-      document.documentElement.scrollTop;
+  function updateScrollEffects() {
+    const scrollTop = window.scrollY;
 
     const scrollHeight =
       document.documentElement.scrollHeight -
       window.innerHeight;
 
-    const percentage =
-      scrollHeight > 0
-        ? (scrollTop / scrollHeight) * 100
-        : 0;
+    const progress = scrollHeight > 0
+      ? scrollTop / scrollHeight
+      : 0;
 
-    if (progress) {
-      progress.style.width = `${percentage}%`;
-    }
+    document.documentElement.style.setProperty(
+      "--scroll-progress",
+      progress
+    );
 
     if (header) {
       header.classList.toggle(
         "scrolled",
-        scrollTop > 40
+        scrollTop > 35
       );
     }
 
-    ticking = false;
+    if (scrollProgress) {
+      scrollProgress.setAttribute(
+        "aria-valuenow",
+        Math.round(progress * 100)
+      );
+    }
+
+    scrollTicking = false;
   }
 
   window.addEventListener("scroll", () => {
-    if (!ticking) {
-      window.requestAnimationFrame(updateScroll);
-      ticking = true;
+    if (!scrollTicking) {
+      requestAnimationFrame(updateScrollEffects);
+      scrollTicking = true;
     }
   }, { passive: true });
 
-  updateScroll();
-}
+  updateScrollEffects();
 
-/* =========================
-   REVEAL ANIMATIONS
-========================= */
+  /* =========================================
+     REVEAL ANIMATIONS
+  ========================================= */
 
-function initializeRevealAnimations() {
-  const elements = $$(
-    ".reveal, .reveal-up, .reveal-left, .reveal-right, .reveal-scale"
+  const revealElements = $$(
+    ".reveal, .reveal-left, .reveal-right, .reveal-scale"
   );
 
-  if (!elements.length) return;
-
-  if (
-    prefersReducedMotion ||
-    !("IntersectionObserver" in window)
-  ) {
-    elements.forEach(element => {
-      element.classList.add("visible", "revealed");
+  if (reducedMotion || !("IntersectionObserver" in window)) {
+    revealElements.forEach(element => {
+      element.classList.add("is-visible");
     });
+  } else {
+    const revealObserver = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
 
-    return;
-  }
-
-  const observer = new IntersectionObserver(
-    (entries, currentObserver) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add(
-            "visible",
-            "revealed"
-          );
-
-          currentObserver.unobserve(entry.target);
-        }
-      });
-    },
-    {
-      threshold: 0.12,
-      rootMargin: "0px 0px -45px 0px"
-    }
-  );
-
-  elements.forEach(element => {
-    observer.observe(element);
-  });
-}
-
-/* =========================
-   STAGGER ANIMATIONS
-========================= */
-
-function initializeStaggerAnimations() {
-  const groups = $$(
-    ".service-card, .project-card, .pricing-card, .value-card"
-  );
-
-  groups.forEach((element, index) => {
-    const delay = Math.min(index % 6, 5) * 100;
-
-    element.style.setProperty(
-      "--stagger-delay",
-      `${delay}ms`
-    );
-  });
-}
-
-/* =========================
-   CUSTOM CURSOR
-========================= */
-
-function initializeCustomCursor() {
-  const cursor = $(".custom-cursor, #custom-cursor");
-  const follower = $(".cursor-follower, #cursor-follower");
-
-  if (!cursor || !follower) return;
-
-  let mouseX = 0;
-  let mouseY = 0;
-  let followerX = 0;
-  let followerY = 0;
-
-  let animationFrame = null;
-  let active = true;
-
-  document.addEventListener("mousemove", event => {
-    mouseX = event.clientX;
-    mouseY = event.clientY;
-
-    cursor.style.left = `${mouseX}px`;
-    cursor.style.top = `${mouseY}px`;
-  }, { passive: true });
-
-  function animateFollower() {
-    if (!active) return;
-
-    followerX += (mouseX - followerX) * 0.16;
-    followerY += (mouseY - followerY) * 0.16;
-
-    follower.style.left = `${followerX}px`;
-    follower.style.top = `${followerY}px`;
-
-    animationFrame = requestAnimationFrame(
-      animateFollower
-    );
-  }
-
-  animateFollower();
-
-  const interactiveElements = $$(
-    "a, button, input, textarea, select, [role='button']"
-  );
-
-  interactiveElements.forEach(element => {
-    element.addEventListener("mouseenter", () => {
-      cursor.classList.add("active");
-      follower.classList.add("active");
-    });
-
-    element.addEventListener("mouseleave", () => {
-      cursor.classList.remove("active");
-      follower.classList.remove("active");
-    });
-  });
-
-  document.addEventListener("mouseleave", () => {
-    cursor.classList.add("hidden");
-    follower.classList.add("hidden");
-  });
-
-  document.addEventListener("mouseenter", () => {
-    cursor.classList.remove("hidden");
-    follower.classList.remove("hidden");
-  });
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      active = false;
-
-      if (animationFrame) {
-        cancelAnimationFrame(animationFrame);
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -40px 0px"
       }
-    } else if (!active) {
-      active = true;
-      animateFollower();
-    }
-  });
-}
+    );
 
-/* =========================
-   MAGNETIC BUTTONS
-========================= */
-
-function initializeMagneticButtons() {
-  if (!hasFinePointer) return;
-
-  $$("[data-magnetic], .magnetic").forEach(button => {
-    button.addEventListener("mousemove", event => {
-      const rect = button.getBoundingClientRect();
-
-      const x =
-        event.clientX - rect.left - rect.width / 2;
-
-      const y =
-        event.clientY - rect.top - rect.height / 2;
-
-      const strength = 0.16;
-
-      button.style.translate =
-        `${x * strength}px ${y * strength}px`;
+    revealElements.forEach(element => {
+      revealObserver.observe(element);
     });
+  }
 
-    button.addEventListener("mouseleave", () => {
-      button.style.translate = "";
-    });
-  });
-}
+  /* =========================================
+     STAGGERED CARD ANIMATIONS
+  ========================================= */
 
-/* =========================
-   3D TILT CARDS
-========================= */
-
-function initializeTiltCards() {
-  if (!hasFinePointer) return;
-
-  $$("[data-tilt], .tilt-card").forEach(card => {
-    card.addEventListener("mousemove", event => {
-      const rect = card.getBoundingClientRect();
-
-      const x =
-        (event.clientX - rect.left) / rect.width;
-
-      const y =
-        (event.clientY - rect.top) / rect.height;
-
-      const rotateX = (0.5 - y) * 8;
-      const rotateY = (x - 0.5) * 8;
-
-      card.style.transform =
-        `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-    });
-
-    card.addEventListener("mouseleave", () => {
-      card.style.transform = "";
-    });
-  });
-}
-
-/* =========================
-   HERO PARALLAX
-========================= */
-
-function initializeHeroParallax() {
-  if (!hasFinePointer) return;
-
-  const scenes = $$(
-    ".hero-scene, .hero-visual, .hero-scene-glow, .hero-orbit, .hero-core, .core-sphere, .hero-interface, .hero-spark"
+  const staggerGroups = $$(
+    ".service-grid, .feature-grid, .info-grid, " +
+    ".project-grid, .pricing-grid, .stats-grid"
   );
 
-  if (!scenes.length) return;
-
-  let frame = null;
-  let pointerX = 0;
-  let pointerY = 0;
-
-  document.addEventListener("mousemove", event => {
-    pointerX =
-      (event.clientX / window.innerWidth - 0.5) * 2;
-
-    pointerY =
-      (event.clientY / window.innerHeight - 0.5) * 2;
-
-    if (frame) return;
-
-    frame = requestAnimationFrame(() => {
-      scenes.forEach((scene, index) => {
-        const depth = (index % 5 + 1) * 3;
-
-        scene.style.setProperty(
-          "--parallax-x",
-          `${pointerX * depth}px`
-        );
-
-        scene.style.setProperty(
-          "--parallax-y",
-          `${pointerY * depth}px`
-        );
-      });
-
-      frame = null;
-    });
-  }, { passive: true });
-
-  document.addEventListener("mouseleave", () => {
-    scenes.forEach(scene => {
-      scene.style.setProperty("--parallax-x", "0px");
-      scene.style.setProperty("--parallax-y", "0px");
-    });
-  });
-}
-
-/* =========================
-   FAQ ACCORDION
-========================= */
-
-function initializeFAQ() {
-  const items = $$(".faq-item");
-
-  items.forEach((item, index) => {
-    const question = $(
-      ".faq-question, .faq-header, button",
-      item
+  staggerGroups.forEach(group => {
+    const cards = $$(
+      ".service-card, .feature-card, .info-card, " +
+      ".project-card, .pricing-card, .stat-card",
+      group
     );
 
-    const answer = $(".faq-answer", item);
+    cards.forEach((card, index) => {
+      card.style.setProperty(
+        "--reveal-delay",
+        `${Math.min(index * 100, 500)}ms`
+      );
+    });
+  });
 
-    if (!question || !answer) return;
+  /* =========================================
+     CUSTOM CURSOR
+  ========================================= */
 
-    if (!answer.id) {
-      answer.id = `faq-answer-${index + 1}`;
+  if (finePointer && !reducedMotion) {
+    const cursorDot = document.createElement("div");
+    const cursorRing = document.createElement("div");
+
+    cursorDot.className = "cursor-dot";
+    cursorRing.className = "cursor-ring";
+
+    document.body.append(cursorDot, cursorRing);
+
+    document.body.classList.add("custom-cursor");
+
+    let mouseX = -100;
+    let mouseY = -100;
+
+    let ringX = -100;
+    let ringY = -100;
+
+    let cursorFrame = null;
+
+    document.addEventListener("mousemove", event => {
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+
+      cursorDot.style.transform =
+        `translate3d(${mouseX}px,${mouseY}px,0) translate(-50%,-50%)`;
+    }, { passive: true });
+
+    function animateCursor() {
+      ringX += (mouseX - ringX) * 0.16;
+      ringY += (mouseY - ringY) * 0.16;
+
+      cursorRing.style.transform =
+        `translate3d(${ringX}px,${ringY}px,0) translate(-50%,-50%)`;
+
+      cursorFrame = requestAnimationFrame(animateCursor);
     }
 
-    question.setAttribute("aria-controls", answer.id);
+    animateCursor();
 
-    const initiallyOpen =
-      item.classList.contains("active");
-
-    question.setAttribute(
-      "aria-expanded",
-      String(initiallyOpen)
+    const interactiveElements = $$(
+      "a, button, input, textarea, select, summary, " +
+      "[role='button'], .button"
     );
 
-    answer.style.maxHeight = initiallyOpen
-      ? `${answer.scrollHeight}px`
-      : "0px";
+    interactiveElements.forEach(element => {
+      element.addEventListener("mouseenter", () => {
+        cursorRing.classList.add("cursor-hover");
+      });
 
-    question.addEventListener("click", () => {
-      const isOpen = item.classList.contains("active");
+      element.addEventListener("mouseleave", () => {
+        cursorRing.classList.remove("cursor-hover");
+      });
+    });
 
-      // Close other FAQ items.
-      items.forEach(otherItem => {
-        if (otherItem === item) return;
+    document.addEventListener("mousedown", () => {
+      cursorRing.classList.add("cursor-click");
+    });
 
-        otherItem.classList.remove("active");
+    document.addEventListener("mouseup", () => {
+      cursorRing.classList.remove("cursor-click");
+    });
 
-        const otherQuestion = $(
-          ".faq-question, .faq-header, button",
-          otherItem
-        );
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        cancelAnimationFrame(cursorFrame);
+      } else {
+        animateCursor();
+      }
+    });
+  }
 
-        const otherAnswer = $(
-          ".faq-answer",
-          otherItem
-        );
+  /* =========================================
+     MAGNETIC BUTTONS
+  ========================================= */
 
-        if (otherQuestion) {
-          otherQuestion.setAttribute(
-            "aria-expanded",
-            "false"
-          );
+  if (finePointer && !reducedMotion) {
+    $$("[data-magnetic], .magnetic").forEach(element => {
+      element.addEventListener("mousemove", event => {
+        const rect = element.getBoundingClientRect();
+
+        const x =
+          event.clientX - rect.left - rect.width / 2;
+
+        const y =
+          event.clientY - rect.top - rect.height / 2;
+
+        element.style.translate =
+          `${x * 0.12}px ${y * 0.12}px`;
+      });
+
+      element.addEventListener("mouseleave", () => {
+        element.style.translate = "";
+      });
+    });
+  }
+
+  /* =========================================
+     3D TILT CARDS
+  ========================================= */
+
+  if (finePointer && !reducedMotion) {
+    $$("[data-tilt], .tilt-card").forEach(card => {
+      card.addEventListener("mousemove", event => {
+        const rect = card.getBoundingClientRect();
+
+        const x =
+          (event.clientX - rect.left) / rect.width;
+
+        const y =
+          (event.clientY - rect.top) / rect.height;
+
+        const rotateY = (x - 0.5) * 8;
+        const rotateX = (0.5 - y) * 8;
+
+        card.style.transform =
+          `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+
+      card.addEventListener("mouseleave", () => {
+        card.style.transform = "";
+      });
+    });
+  }
+
+  /* =========================================
+     CARD LIGHT REFLECTION
+  ========================================= */
+
+  if (finePointer && !reducedMotion) {
+    $$(
+      ".info-card, .pricing-card, .service-card, .feature-card"
+    ).forEach(card => {
+      card.addEventListener("mousemove", event => {
+        const rect = card.getBoundingClientRect();
+
+        const x = (
+          (event.clientX - rect.left) / rect.width
+        ) * 100;
+
+        const y = (
+          (event.clientY - rect.top) / rect.height
+        ) * 100;
+
+        card.style.setProperty("--mouse-x", `${x}%`);
+        card.style.setProperty("--mouse-y", `${y}%`);
+      });
+    });
+  }
+
+  /* =========================================
+     HERO PARALLAX
+     Does not overwrite CSS transforms.
+  ========================================= */
+
+  if (finePointer && !reducedMotion) {
+    const heroArt = $(".hero-art");
+
+    const heroCore = $(".hero-core", heroArt || document);
+    const heroGlow = $(".hero-scene-glow", heroArt || document);
+
+    if (heroArt) {
+      heroArt.addEventListener("mousemove", event => {
+        const rect = heroArt.getBoundingClientRect();
+
+        const x =
+          (event.clientX - rect.left) / rect.width - 0.5;
+
+        const y =
+          (event.clientY - rect.top) / rect.height - 0.5;
+
+        if (heroCore) {
+          heroCore.style.translate =
+            `${x * 12}px ${y * 12}px`;
         }
 
-        if (otherAnswer) {
-          otherAnswer.style.maxHeight = "0px";
+        if (heroGlow) {
+          heroGlow.style.translate =
+            `${x * -15}px ${y * -15}px`;
         }
       });
 
-      item.classList.toggle("active", !isOpen);
+      heroArt.addEventListener("mouseleave", () => {
+        if (heroCore) heroCore.style.translate = "";
+        if (heroGlow) heroGlow.style.translate = "";
+      });
+    }
+  }
 
-      question.setAttribute(
-        "aria-expanded",
-        String(!isOpen)
-      );
+  /* =========================================
+     FAQ
+     Native <details> and <summary> support.
+  ========================================= */
 
-      answer.style.maxHeight = !isOpen
-        ? `${answer.scrollHeight}px`
-        : "0px";
-    });
+  $$(".faq-item").forEach(item => {
+    if (item.tagName.toLowerCase() === "details") {
+      item.addEventListener("toggle", () => {
+        const summary = $("summary", item);
+
+        if (summary) {
+          summary.setAttribute(
+            "aria-expanded",
+            String(item.open)
+          );
+        }
+      });
+
+      const summary = $("summary", item);
+
+      if (summary) {
+        summary.setAttribute(
+          "aria-expanded",
+          String(item.open)
+        );
+      }
+    }
   });
-}
 
-/* =========================
-   CONTACT FORM
-========================= */
+  /* =========================================
+     CONTACT FORM
+  ========================================= */
 
-function initializeContactForm() {
-  const form = $(
+  const contactForm = $(
     "#contact-form, .contact-form"
   );
 
-  if (!form) return;
+  if (contactForm) {
+    contactForm.addEventListener("submit", event => {
+      event.preventDefault();
 
-  form.addEventListener("submit", event => {
-    event.preventDefault();
+      if (!contactForm.reportValidity()) return;
 
-    const formData = new FormData(form);
+      const formData = new FormData(contactForm);
 
-    const name =
-      formData.get("name")?.toString().trim() || "";
+      const name =
+        formData.get("name")?.toString().trim() || "";
 
-    const email =
-      formData.get("email")?.toString().trim() || "";
+      const email =
+        formData.get("email")?.toString().trim() || "";
 
-    const subject =
-      formData.get("subject")?.toString().trim() ||
-      "New Website Enquiry";
+      const subject =
+        formData.get("subject")?.toString().trim() ||
+        "Website Enquiry";
 
-    const message =
-      formData.get("message")?.toString().trim() || "";
+      const message =
+        formData.get("message")?.toString().trim() || "";
 
-    if (!name || !email || !message) {
-      alert("Please fill in all required fields.");
-      return;
-    }
+      if (!name || !email || !message) {
+        return;
+      }
 
-    const emailPattern =
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const mailSubject = encodeURIComponent(subject);
 
-    if (!emailPattern.test(email)) {
-      alert("Please enter a valid email address.");
-      return;
-    }
+      const mailBody = encodeURIComponent(
+        `Name: ${name}\n` +
+        `Email: ${email}\n\n` +
+        `Message:\n${message}`
+      );
 
-    const body = [
-      `Name: ${name}`,
-      `Email: ${email}`,
-      "",
-      "Message:",
-      message
-    ].join("\n");
+      const mailto =
+        `mailto:${TATVA_CONFIG.email}` +
+        `?subject=${mailSubject}` +
+        `&body=${mailBody}`;
 
-    const mailto =
-      `mailto:${TATVA_CONFIG.email}` +
-      `?subject=${encodeURIComponent(subject)}` +
-      `&body=${encodeURIComponent(body)}`;
+      const note = $(
+        "#form-note, .form-note"
+      );
 
-    window.location.href = mailto;
-  });
-}
+      if (note) {
+        note.textContent =
+          "Opening your email application...";
+      }
 
-/* =========================
-   BACK TO TOP
-========================= */
-
-function initializeBackToTop() {
-  const button = $(
-    ".back-to-top, #back-to-top, [data-back-to-top]"
-  );
-
-  if (!button) return;
-
-  button.addEventListener("click", () => {
-    window.scrollTo({
-      top: 0,
-      behavior: prefersReducedMotion ? "instant" : "smooth"
+      window.location.href = mailto;
     });
-  });
-
-  window.addEventListener("scroll", () => {
-    button.classList.toggle(
-      "visible",
-      window.scrollY > 450
-    );
-  }, { passive: true });
-}
-
-/* =========================
-   IMAGE EFFECTS
-========================= */
-
-function initializeImageEffects() {
-  const images = $$(
-    ".project-image img, .service-image img, .image-reveal img"
-  );
-
-  if (
-    prefersReducedMotion ||
-    !("IntersectionObserver" in window)
-  ) {
-    images.forEach(image => {
-      image.classList.add("visible", "revealed");
-    });
-
-    return;
   }
 
-  const observer = new IntersectionObserver(
-    (entries, currentObserver) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add(
-            "visible",
-            "revealed"
-          );
+  /* =========================================
+     BACK TO TOP
+  ========================================= */
 
-          currentObserver.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.15 }
+  const backToTop = $(
+    "#back-to-top, .back-to-top, [data-back-to-top]"
   );
 
-  images.forEach(image => observer.observe(image));
-}
+  if (backToTop) {
+    backToTop.addEventListener("click", event => {
+      event.preventDefault();
 
-/* =========================
-   SMOOTH ANCHOR SCROLLING
-========================= */
+      window.scrollTo({
+        top: 0,
+        behavior: reducedMotion ? "auto" : "smooth"
+      });
+    });
+  }
 
-function initializeSmoothScrolling() {
-  $$('a[href^="#"]').forEach(link => {
+  /* =========================================
+     SMOOTH INTERNAL ANCHORS
+  ========================================= */
+
+  $$('a[href*="#"]').forEach(link => {
     link.addEventListener("click", event => {
-      const hash = link.getAttribute("href");
+      const href = link.getAttribute("href");
 
-      if (!hash || hash === "#") return;
+      if (!href || href === "#") return;
 
-      const target = document.getElementById(
-        decodeURIComponent(hash.slice(1))
+      let url;
+
+      try {
+        url = new URL(href, window.location.href);
+      } catch {
+        return;
+      }
+
+      if (
+        url.origin !== window.location.origin ||
+        url.pathname !== window.location.pathname ||
+        !url.hash
+      ) {
+        return;
+      }
+
+      const targetId = decodeURIComponent(
+        url.hash.slice(1)
       );
+
+      const target = document.getElementById(targetId);
 
       if (!target) return;
 
       event.preventDefault();
 
       target.scrollIntoView({
-        behavior: prefersReducedMotion ? "instant" : "smooth",
+        behavior: reducedMotion ? "auto" : "smooth",
         block: "start"
       });
 
-      if (history.pushState) {
-        history.pushState(null, "", hash);
-      }
+      history.replaceState(null, "", url.hash);
+
+      closeMobileMenu();
     });
   });
-}
 
-/* =========================
-   PAGE TRANSITIONS
-========================= */
+  /* =========================================
+     PAGE TRANSITIONS
+  ========================================= */
 
-function initializePageTransitions() {
-  $$("a[href]").forEach(link => {
-    link.addEventListener("click", event => {
-      if (
-        event.defaultPrevented ||
-        event.button !== 0 ||
-        event.metaKey ||
-        event.ctrlKey ||
-        event.shiftKey ||
-        event.altKey ||
-        link.target === "_blank" ||
-        link.hasAttribute("download")
-      ) {
-        return;
-      }
+  if (!reducedMotion) {
+    $$("a[href]").forEach(link => {
+      link.addEventListener("click", event => {
+        if (
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.ctrlKey ||
+          event.metaKey ||
+          event.shiftKey ||
+          event.altKey
+        ) {
+          return;
+        }
 
-      const href = link.getAttribute("href");
+        if (
+          link.target === "_blank" ||
+          link.hasAttribute("download")
+        ) {
+          return;
+        }
 
-      if (
-        !href ||
-        href.startsWith("#") ||
-        href.startsWith("mailto:") ||
-        href.startsWith("tel:") ||
-        href.startsWith("javascript:")
-      ) {
-        return;
-      }
+        const href = link.getAttribute("href");
 
-      let destination;
+        if (
+          !href ||
+          href.startsWith("#") ||
+          href.startsWith("mailto:") ||
+          href.startsWith("tel:") ||
+          href.startsWith("javascript:")
+        ) {
+          return;
+        }
 
-      try {
-        destination = new URL(href, window.location.href);
-      } catch {
-        return;
-      }
+        let destination;
 
-      if (destination.origin !== window.location.origin) {
-        return;
-      }
+        try {
+          destination = new URL(
+            href,
+            window.location.href
+          );
+        } catch {
+          return;
+        }
 
-      if (!destination.pathname.toLowerCase().endsWith(".html")) {
-        return;
-      }
+        if (
+          destination.origin !== window.location.origin ||
+          !destination.pathname.toLowerCase().endsWith(".html")
+        ) {
+          return;
+        }
 
-      const currentURL = new URL(window.location.href);
+        if (
+          destination.pathname === window.location.pathname &&
+          destination.search === window.location.search
+        ) {
+          return;
+        }
 
-      const samePage =
-        destination.pathname === currentURL.pathname &&
-        destination.search === currentURL.search;
+        event.preventDefault();
 
-      if (samePage) return;
+        document.body.classList.add("page-leaving");
 
-      event.preventDefault();
-
-      if (prefersReducedMotion) {
-        window.location.href = destination.href;
-        return;
-      }
-
-      document.body.classList.add("page-leaving");
-
-      window.setTimeout(() => {
-        window.location.href = destination.href;
-      }, 300);
+        window.setTimeout(() => {
+          window.location.href = destination.href;
+        }, 300);
+      });
     });
-  });
-}
+  }
 
-/* =========================
-   REDUCED MOTION CLASS
-========================= */
+  /* =========================================
+     IMAGE REVEAL
+  ========================================= */
 
-if (prefersReducedMotion) {
-  document.documentElement.classList.add(
-    "reduce-motion"
+  if ("IntersectionObserver" in window && !reducedMotion) {
+    const imageObserver = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("image-visible");
+
+            imageObserver.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.15
+      }
+    );
+
+    $$("img[data-reveal], .image-reveal").forEach(image => {
+      imageObserver.observe(image);
+    });
+  }
+
+  /* =========================================
+     ACCESSIBILITY
+  ========================================= */
+
+  if (reducedMotion) {
+    document.body.classList.add("reduce-motion");
+
+    revealElements.forEach(element => {
+      element.classList.add("is-visible");
+    });
+  }
+
+  document.documentElement.classList.add("js-enabled");
+
+  /* =========================================
+     CONSOLE BRANDING
+  ========================================= */
+
+  console.log(
+    "%c TATVA WEBS ",
+    "background:#00D9FF;color:#06101B;padding:9px 15px;font-weight:900;border-radius:5px;"
   );
-}
 
-/* =========================
-   END OF TATVA WEBS SCRIPT
-========================= */
+  console.log(
+    "%cBuilding digital experiences.",
+    "color:#8CEBFF;font-size:12px;"
+  );
+
+});
