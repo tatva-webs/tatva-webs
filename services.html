@@ -4,21 +4,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080808">
+  <meta name="theme-color" content="#070B18">
   <meta name="description" content="Explore website design, web development, branding and creative digital services by Tatva Webs.">
   <title>Our Services | Tatva Webs</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body data-page="services">
 
+<div class="ambient-3d" aria-hidden="true"></div>
+
 <header class="site-header">
   <div class="header-inner">
-    <a href="index.html" class="brand">
-      <span class="brand-text">TATVA<span>WEBS.</span></span>
+
+    <a href="index.html" class="brand" aria-label="Tatva Webs Home">
+      <img src="tatva-webs-logo.png" alt="Tatva Webs" class="brand-logo">
     </a>
 
-    <nav class="main-nav">
+    <nav class="main-nav" id="main-navigation">
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
       <a href="services.html" class="active">Services</a>
@@ -30,133 +38,227 @@
     </nav>
 
     <a href="contact.html" class="button button-small magnetic header-cta">
-      Let's Talk ↗
+      Let's Talk <span>↗</span>
     </a>
 
-    <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
+    <button class="menu-toggle" aria-label="Toggle navigation"
+      aria-expanded="false" aria-controls="main-navigation">
       <span></span><span></span>
     </button>
+
   </div>
 </header>
 
 <main>
 
   <!-- HERO -->
-  <section class="page-hero section-shell">
-    <div class="eyebrow reveal">OUR SERVICES / 03</div>
+  <section class="page-hero section-shell services-hero">
+
+    <div class="eyebrow reveal">
+      <span class="status-dot"></span>
+      WHAT WE CREATE / 03
+    </div>
 
     <h1 class="page-title reveal">
-      Creative solutions.<br>
-      Digital results.<br>
-      <span>One studio.</span>
+      We turn ideas<br>
+      into <span class="text-gradient">digital</span><br>
+      experiences.
     </h1>
 
     <p class="page-lead reveal">
-      From building your first website to refreshing an established
-      digital identity, we help transform ideas into online experiences.
+      Strategy, design and development come together to create
+      digital experiences that look exceptional, feel intuitive
+      and give your brand room to grow.
     </p>
+
+    <div class="services-hero-meta reveal">
+      <span>DESIGN</span>
+      <span class="meta-divider">/</span>
+      <span>DEVELOPMENT</span>
+      <span class="meta-divider">/</span>
+      <span>CREATIVITY</span>
+    </div>
+
+    <div class="services-hero-decoration" aria-hidden="true">
+      <div class="services-orbit orbit-one"></div>
+      <div class="services-orbit orbit-two"></div>
+      <div class="services-orbit orbit-three"></div>
+      <div class="services-orbit-core">
+        <span></span>
+      </div>
+      <div class="services-orbit-label label-top">DIGITAL / 001</div>
+      <div class="services-orbit-label label-bottom">BUILT WITH INTENT</div>
+    </div>
+
   </section>
 
-  <!-- SERVICES -->
+
+  <!-- SERVICES INTRO -->
   <section class="section-shell section-pad">
 
     <div class="section-heading">
       <div class="eyebrow reveal">01 / WHAT WE OFFER</div>
+
       <h2 class="reveal">
-        Services designed for
-        <span class="text-gradient">your next step.</span>
+        Everything your brand needs<br>
+        to make its <span class="text-gradient">next move.</span>
       </h2>
+
       <p class="reveal">
-        Every service is shaped around your goals, your audience
-        and the experience you want to create.
+        From the first visual concept to the final line of code,
+        we bring every part of your digital presence together.
       </p>
     </div>
 
-    <div class="service-grid">
+    <div class="service-grid services-premium-grid">
 
       <article class="service-card glass tilt-card reveal">
-        <div class="card-icon">✦</div>
+        <div class="service-card-top">
+          <span class="card-icon">✳</span>
+          <span class="service-number">01 / DESIGN</span>
+        </div>
         <h3>Website Design</h3>
         <p>
-          Visually engaging website layouts with clear structure,
-          thoughtful typography and a consistent brand identity.
+          Distinctive layouts, thoughtful typography and
+          carefully considered visual systems that give
+          your brand a memorable online presence.
         </p>
+        <div class="service-card-bottom">
+          <span>VISUAL EXPERIENCE</span>
+          <span class="service-arrow">↗</span>
+        </div>
       </article>
 
       <article class="service-card glass tilt-card reveal">
-        <div class="card-icon">⌘</div>
+        <div class="service-card-top">
+          <span class="card-icon">⌘</span>
+          <span class="service-number">02 / BUILD</span>
+        </div>
         <h3>Web Development</h3>
         <p>
-          Responsive websites built with modern front-end
-          technologies and attention to usability and performance.
+          Responsive, carefully structured websites built
+          with modern front-end technologies and a focus
+          on usability, accessibility and performance.
         </p>
+        <div class="service-card-bottom">
+          <span>MODERN DEVELOPMENT</span>
+          <span class="service-arrow">↗</span>
+        </div>
       </article>
 
       <article class="service-card glass tilt-card reveal">
-        <div class="card-icon">◈</div>
+        <div class="service-card-top">
+          <span class="card-icon">◈</span>
+          <span class="service-number">03 / IDENTITY</span>
+        </div>
         <h3>Brand Identity</h3>
         <p>
-          Visual direction, colours, typography and design
-          elements that help your brand feel recognizable.
+          A consistent visual direction through colour,
+          typography and design elements that help
+          your business build recognition.
         </p>
+        <div class="service-card-bottom">
+          <span>BRAND DIRECTION</span>
+          <span class="service-arrow">↗</span>
+        </div>
       </article>
 
       <article class="service-card glass tilt-card reveal">
-        <div class="card-icon">◎</div>
+        <div class="service-card-top">
+          <span class="card-icon">◎</span>
+          <span class="service-number">04 / CONVERSION</span>
+        </div>
         <h3>Landing Pages</h3>
         <p>
-          Focused web pages that communicate a clear message
-          and guide visitors towards a specific action.
+          Purpose-driven pages with focused messaging,
+          strong visual hierarchy and clear calls to
+          action that guide visitors through your offer.
         </p>
+        <div class="service-card-bottom">
+          <span>FOCUSED EXPERIENCES</span>
+          <span class="service-arrow">↗</span>
+        </div>
       </article>
 
       <article class="service-card glass tilt-card reveal">
-        <div class="card-icon">↗</div>
+        <div class="service-card-top">
+          <span class="card-icon">↗</span>
+          <span class="service-number">05 / EVOLUTION</span>
+        </div>
         <h3>Website Redesign</h3>
         <p>
-          Refresh outdated websites with modern layouts,
-          better navigation and a stronger visual experience.
+          Give an existing website a fresh direction
+          with improved layouts, cleaner navigation
+          and a more contemporary experience.
         </p>
+        <div class="service-card-bottom">
+          <span>DESIGN REFRESH</span>
+          <span class="service-arrow">↗</span>
+        </div>
       </article>
 
       <article class="service-card glass tilt-card reveal">
-        <div class="card-icon">✧</div>
+        <div class="service-card-top">
+          <span class="card-icon">✧</span>
+          <span class="service-number">06 / MOTION</span>
+        </div>
         <h3>Creative Interactions</h3>
         <p>
-          Motion, transitions, micro-interactions and visual
-          details that make your website feel alive.
+          Smooth transitions, micro-interactions,
+          motion details and immersive visual elements
+          that make a website feel alive.
         </p>
+        <div class="service-card-bottom">
+          <span>INTERACTIVE DESIGN</span>
+          <span class="service-arrow">↗</span>
+        </div>
       </article>
 
     </div>
 
   </section>
 
-  <!-- APPROACH -->
-  <section class="feature-band">
+
+  <!-- FEATURE BAND -->
+  <section class="feature-band services-feature-band">
+
     <div class="section-shell feature-band-inner">
+
       <div>
-        <div class="eyebrow reveal">02 / OUR APPROACH</div>
+        <div class="eyebrow reveal">02 / OUR PHILOSOPHY</div>
+
         <h2 class="reveal">
-          We don't just make it look good.
-          We make it <span class="text-gradient">make sense.</span>
+          Not just another website.<br>
+          A digital experience<br>
+          with <span class="text-gradient">a purpose.</span>
         </h2>
+
+        <p class="reveal">
+          Every detail should have a reason to exist.
+          We combine creative thinking with practical
+          execution to make the final experience work
+          as beautifully as it looks.
+        </p>
       </div>
 
       <a href="process.html" class="button magnetic reveal">
-        See Our Process ↗
+        Explore Our Process <span>↗</span>
       </a>
+
     </div>
+
   </section>
 
-  <!-- WHY OUR SERVICES -->
+
+  <!-- DIFFERENCE -->
   <section class="section-shell section-pad">
 
     <div class="section-heading">
-      <div class="eyebrow reveal">03 / THE DIFFERENCE</div>
+      <div class="eyebrow reveal">03 / THE TATVA DIFFERENCE</div>
+
       <h2 class="reveal">
-        Built around
-        <span class="text-gradient">your business.</span>
+        Thoughtfully made.<br>
+        <span class="text-gradient">Purposefully built.</span>
       </h2>
     </div>
 
@@ -166,103 +268,138 @@
         <div class="card-icon">01</div>
         <h3>Made to Fit</h3>
         <p>
-          Your project gets an approach based on your requirements,
-          rather than a one-size-fits-all solution.
+          Every project starts with your goals and
+          requirements. The solution should fit your
+          brand, not the other way around.
         </p>
       </article>
 
       <article class="info-card glass tilt-card reveal">
         <div class="card-icon">02</div>
-        <h3>Easy to Navigate</h3>
+        <h3>Clarity First</h3>
         <p>
-          We prioritize intuitive layouts that help visitors
-          find the information they need.
+          Clean layouts, useful content and intuitive
+          navigation help visitors understand your
+          business without unnecessary friction.
         </p>
       </article>
 
       <article class="info-card glass tilt-card reveal">
         <div class="card-icon">03</div>
-        <h3>Ready for Every Screen</h3>
+        <h3>Every Screen Matters</h3>
         <p>
-          We design responsive experiences for desktop,
-          tablet and mobile users.
+          Responsive experiences are designed to
+          adapt across desktop, tablet and mobile
+          screens.
         </p>
       </article>
 
     </div>
+
   </section>
 
-  <!-- SERVICE PROCESS -->
+
+  <!-- PROCESS -->
   <section class="section-shell section-pad">
 
     <div class="section-heading">
       <div class="eyebrow reveal">04 / HOW WE WORK</div>
+
       <h2 class="reveal">
-        Clear steps.
-        <span class="text-gradient">Better outcomes.</span>
+        A clear process.<br>
+        <span class="text-gradient">A better outcome.</span>
       </h2>
+
+      <p class="reveal">
+        Great digital work comes from a thoughtful
+        process, not rushed decisions.
+      </p>
     </div>
 
     <div class="process-grid">
 
       <article class="info-card glass reveal">
-        <h3>01 — Understand</h3>
+        <div class="process-index">01</div>
+        <h3>Understand</h3>
         <p>
-          We learn about your business, audience, goals
-          and expectations.
+          We learn about your business, audience,
+          goals and expectations.
         </p>
       </article>
 
       <article class="info-card glass reveal">
-        <h3>02 — Plan</h3>
+        <div class="process-index">02</div>
+        <h3>Plan</h3>
         <p>
-          We define the structure, visual direction
+          We define the structure, creative direction
           and scope of your project.
         </p>
       </article>
 
       <article class="info-card glass reveal">
-        <h3>03 — Create</h3>
+        <div class="process-index">03</div>
+        <h3>Create</h3>
         <p>
           We design and develop the experience,
-          refining it as the project progresses.
+          refining the details along the way.
         </p>
       </article>
 
       <article class="info-card glass reveal">
-        <h3>04 — Launch</h3>
+        <div class="process-index">04</div>
+        <h3>Launch</h3>
         <p>
-          We review the final result and prepare
-          your website for launch.
+          We review the finished experience and
+          prepare the website for launch.
         </p>
       </article>
 
     </div>
 
+    <div class="process-link reveal">
+      <a href="process.html" class="text-link">
+        Discover the complete process <span>↗</span>
+      </a>
+    </div>
+
   </section>
+
 
   <!-- CTA -->
   <section class="cta-section section-shell">
-    <div class="eyebrow reveal">READY TO GET STARTED?</div>
+
+    <div class="cta-decoration" aria-hidden="true">
+      <div class="cta-ring"></div>
+      <div class="cta-ring cta-ring-two"></div>
+    </div>
+
+    <div class="eyebrow reveal">
+      <span class="status-dot"></span>
+      HAVE A PROJECT IN MIND?
+    </div>
 
     <h2 class="reveal">
-      Let's build something
+      Let's build something<br>
       <span class="text-gradient">worth remembering.</span>
     </h2>
 
     <p class="reveal">
-      Tell us about your business and what you want to create.
+      Tell us what you're imagining. We'll help turn
+      that idea into a digital experience.
     </p>
 
     <a href="contact.html" class="button magnetic reveal">
-      Discuss Your Project ↗
+      Discuss Your Project <span>↗</span>
     </a>
+
   </section>
 
 </main>
 
+
 <!-- FOOTER -->
 <footer class="site-footer">
+
   <div class="section-shell">
 
     <div class="footer-top">
@@ -270,8 +407,9 @@
       <div class="footer-brand">
         <div>
           <a href="index.html" class="brand">
-            <span class="brand-text">TATVA<span>WEBS.</span></span>
+            <img src="tatva-webs-logo.png" alt="Tatva Webs" class="brand-logo">
           </a>
+
           <p>
             Creating meaningful digital experiences through
             thoughtful design, modern technology and creativity.
@@ -289,10 +427,10 @@
 
       <div class="footer-column">
         <h4>Information</h4>
+        <a href="services.html">Our Services</a>
         <a href="process.html">Our Process</a>
         <a href="faq.html">FAQ</a>
         <a href="contact.html">Contact</a>
-        <a href="mailto:hello@tatvawebs.com">Email Us</a>
       </div>
 
     </div>
@@ -303,11 +441,14 @@
     </div>
 
   </div>
+
 </footer>
+
 
 <div class="cursor-dot"></div>
 <div class="cursor-ring"></div>
 
 <script src="script.js"></script>
+
 </body>
 </html>
