@@ -4,23 +4,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080808">
+  <meta name="theme-color" content="#070B18">
   <meta name="description" content="Discover Tatva Webs, a creative digital studio building meaningful digital experiences.">
+
   <title>About Us | Tatva Webs</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="icon" type="image/png" href="tatva-webs-logo.png">
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body data-page="about">
 
+  <!-- AMBIENT BACKGROUND -->
+  <div class="ambient-3d" aria-hidden="true">
+    <span class="ambient-object sphere one"></span>
+    <span class="ambient-object orb-small two"></span>
+    <span class="ambient-object ring three"></span>
+    <span class="ambient-object cube four"></span>
+    <span class="ambient-object orb-small five"></span>
+    <span class="ambient-object sphere six"></span>
+  </div>
+
+  <!-- HEADER -->
   <header class="site-header">
     <div class="header-inner">
-      <a href="index.html" class="brand">
-        <span class="brand-text">TATVA<span>WEBS.</span></span>
+
+      <a href="index.html" class="brand" aria-label="Tatva Webs Home">
+        <img
+          src="tatva-webs-logo.png"
+          alt="Tatva Webs"
+          class="brand-logo"
+        >
       </a>
 
-      <nav class="main-nav">
+      <nav class="main-nav" aria-label="Main navigation">
         <a href="index.html">Home</a>
-        <a href="about.html" class="active">About</a>
+        <a href="about.html" class="active" aria-current="page">About</a>
         <a href="services.html">Services</a>
         <a href="work.html">Our Work</a>
         <a href="pricing.html">Pricing</a>
@@ -30,25 +52,39 @@
       </nav>
 
       <a href="contact.html" class="button button-small magnetic header-cta">
-        Let's Talk ↗
+        Let's Talk <span>↗</span>
       </a>
 
-      <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
-        <span></span><span></span>
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-label="Toggle navigation"
+        aria-expanded="false"
+      >
+        <span></span>
+        <span></span>
       </button>
+
     </div>
   </header>
 
+
   <main>
 
-    <!-- PAGE HERO -->
+    <!-- =================================
+         ABOUT HERO
+    ================================== -->
     <section class="page-hero section-shell">
-      <div class="eyebrow reveal">ABOUT TATVA WEBS / 01</div>
+
+      <div class="eyebrow reveal">
+        <span class="status-dot"></span>
+        ABOUT TATVA WEBS / 01
+      </div>
 
       <h1 class="page-title reveal">
         We believe in<br>
         creating things<br>
-        <span>that matter.</span>
+        <span class="text-gradient">that matter.</span>
       </h1>
 
       <p class="page-lead reveal">
@@ -56,14 +92,28 @@
         technology and the belief that every brand deserves
         a meaningful digital presence.
       </p>
+
+      <div class="about-hero-meta reveal">
+        <span>CREATIVITY</span>
+        <span>·</span>
+        <span>TECHNOLOGY</span>
+        <span>·</span>
+        <span>PURPOSE</span>
+      </div>
+
     </section>
 
-    <!-- OUR STORY -->
+
+    <!-- =================================
+         OUR STORY
+    ================================== -->
     <section class="section-shell section-pad">
+
       <div class="intro-grid">
 
         <div>
           <div class="eyebrow reveal">01 / OUR STORY</div>
+
           <div class="section-heading reveal">
             <h2>
               A simple idea.
@@ -73,6 +123,7 @@
         </div>
 
         <div class="intro-copy reveal">
+
           <p>
             Tatva Webs was built around one simple thought:
             digital experiences should be more than just attractive
@@ -80,41 +131,71 @@
             and help businesses connect with people.
           </p>
 
-          <p style="margin-top:20px">
+          <p class="about-paragraph">
             We bring together creative thinking, thoughtful design
             and modern web technology to create websites that
             represent brands with confidence.
           </p>
 
-          <p style="margin-top:20px">
+          <p class="about-paragraph">
             Whether it is a new business finding its identity or
             an established brand looking for a fresh direction,
             our goal is to make every digital experience purposeful.
           </p>
+
         </div>
 
       </div>
+
+      <!-- STUDIO PRINCIPLES -->
+      <div class="stats-grid about-stats">
+
+        <div class="stat-card reveal">
+          <strong>01</strong>
+          <span>Think Creatively</span>
+        </div>
+
+        <div class="stat-card reveal">
+          <strong>02</strong>
+          <span>Build Thoughtfully</span>
+        </div>
+
+        <div class="stat-card reveal">
+          <strong>03</strong>
+          <span>Deliver Purposefully</span>
+        </div>
+
+      </div>
+
     </section>
 
-    <!-- OUR PHILOSOPHY -->
+
+    <!-- =================================
+         PHILOSOPHY
+    ================================== -->
     <section class="section-shell section-pad">
 
       <div class="section-heading">
+
         <div class="eyebrow reveal">02 / OUR PHILOSOPHY</div>
+
         <h2 class="reveal">
           Technology meets
           <span class="text-gradient">creativity.</span>
         </h2>
+
         <p class="reveal">
           We believe the best digital work happens when
           creativity and functionality work together.
         </p>
+
       </div>
 
       <div class="info-grid">
 
         <article class="info-card glass tilt-card reveal">
           <div class="card-icon">✦</div>
+          <span class="card-index">01 / PURPOSE</span>
           <h3>Purpose Before Pixels</h3>
           <p>
             Every project begins with understanding the problem,
@@ -124,6 +205,7 @@
 
         <article class="info-card glass tilt-card reveal">
           <div class="card-icon">◈</div>
+          <span class="card-index">02 / PRECISION</span>
           <h3>Details Matter</h3>
           <p>
             From typography to interactions, we care about
@@ -133,6 +215,7 @@
 
         <article class="info-card glass tilt-card reveal">
           <div class="card-icon">⌘</div>
+          <span class="card-index">03 / PROGRESS</span>
           <h3>Always Evolving</h3>
           <p>
             We keep learning, experimenting and exploring
@@ -141,43 +224,72 @@
         </article>
 
       </div>
+
     </section>
 
-    <!-- MISSION AND VISION -->
+
+    <!-- =================================
+         MISSION
+    ================================== -->
     <section class="feature-band">
+
       <div class="section-shell feature-band-inner">
+
         <div>
+
           <div class="eyebrow reveal">03 / OUR MISSION</div>
+
           <h2 class="reveal">
             Make quality digital experiences
-            <span class="text-gradient">accessible and meaningful.</span>
+            <span class="text-gradient">
+              accessible and meaningful.
+            </span>
           </h2>
+
           <p class="page-lead reveal">
             Our mission is to help businesses communicate better
             through thoughtful design and dependable digital solutions.
           </p>
+
         </div>
+
+        <div class="mission-symbol reveal" aria-hidden="true">
+          <div class="mission-symbol-ring"></div>
+          <div class="mission-symbol-core">T.</div>
+          <div class="mission-symbol-glow"></div>
+        </div>
+
       </div>
+
     </section>
 
+
+    <!-- =================================
+         VISION
+    ================================== -->
     <section class="section-shell section-pad">
 
       <div class="section-heading">
+
         <div class="eyebrow reveal">04 / OUR VISION</div>
+
         <h2 class="reveal">
           Build beyond
           <span class="text-gradient">expectations.</span>
         </h2>
+
         <p class="reveal">
           We want to create a studio known for creative thinking,
           honest collaboration and digital work that makes a difference.
         </p>
+
       </div>
 
       <div class="info-grid">
 
         <article class="info-card glass tilt-card reveal">
           <div class="card-icon">01</div>
+          <span class="card-index">OUR VALUE / 01</span>
           <h3>Creativity</h3>
           <p>
             Explore fresh ideas instead of following the ordinary.
@@ -186,6 +298,7 @@
 
         <article class="info-card glass tilt-card reveal">
           <div class="card-icon">02</div>
+          <span class="card-index">OUR VALUE / 02</span>
           <h3>Integrity</h3>
           <p>
             Be transparent, communicate clearly and value trust.
@@ -194,6 +307,7 @@
 
         <article class="info-card glass tilt-card reveal">
           <div class="card-icon">03</div>
+          <span class="card-index">OUR VALUE / 03</span>
           <h3>Growth</h3>
           <p>
             Improve continuously and create better experiences
@@ -202,23 +316,36 @@
         </article>
 
       </div>
+
     </section>
 
-    <!-- WHAT WE STAND FOR -->
+
+    <!-- =================================
+         OUR APPROACH
+    ================================== -->
     <section class="section-shell section-pad">
 
       <div class="section-heading">
+
         <div class="eyebrow reveal">05 / WHAT WE STAND FOR</div>
+
         <h2 class="reveal">
           Not just another
           <span class="text-gradient">web studio.</span>
         </h2>
+
+        <p class="reveal">
+          A thoughtful process turns a good idea into a meaningful
+          digital experience.
+        </p>
+
       </div>
 
       <div class="process-grid">
 
         <article class="info-card glass reveal">
-          <h3>01 — Understand</h3>
+          <div class="card-icon">01</div>
+          <h3>Understand</h3>
           <p>
             We listen first. Understanding your business and
             goals helps us make better creative decisions.
@@ -226,7 +353,8 @@
         </article>
 
         <article class="info-card glass reveal">
-          <h3>02 — Create</h3>
+          <div class="card-icon">02</div>
+          <h3>Create</h3>
           <p>
             We combine strategy, visual design and technology
             to shape a strong digital experience.
@@ -234,7 +362,8 @@
         </article>
 
         <article class="info-card glass reveal">
-          <h3>03 — Refine</h3>
+          <div class="card-icon">03</div>
+          <h3>Refine</h3>
           <p>
             We pay attention to feedback, improve the details
             and make sure the experience feels right.
@@ -242,7 +371,8 @@
         </article>
 
         <article class="info-card glass reveal">
-          <h3>04 — Deliver</h3>
+          <div class="card-icon">04</div>
+          <h3>Deliver</h3>
           <p>
             We work towards a polished result that is ready
             to represent your brand online.
@@ -250,10 +380,17 @@
         </article>
 
       </div>
+
     </section>
 
-    <!-- CTA -->
+
+    <!-- =================================
+         FINAL CTA
+    ================================== -->
     <section class="cta-section section-shell">
+
+      <div class="cta-orb" aria-hidden="true"></div>
+
       <div class="eyebrow reveal">HAVE AN IDEA?</div>
 
       <h2 class="reveal">
@@ -268,26 +405,38 @@
       <a href="contact.html" class="button magnetic reveal">
         Work With Us ↗
       </a>
+
     </section>
 
   </main>
 
-  <!-- FOOTER -->
+
+  <!-- =================================
+       FOOTER
+  ================================== -->
   <footer class="site-footer">
+
     <div class="section-shell">
 
       <div class="footer-top">
 
         <div class="footer-brand">
+
           <div>
-            <a href="index.html" class="brand">
-              <span class="brand-text">TATVA<span>WEBS.</span></span>
+            <a href="index.html" class="brand" aria-label="Tatva Webs Home">
+              <img
+                src="tatva-webs-logo.png"
+                alt="Tatva Webs"
+                class="brand-logo"
+              >
             </a>
+
             <p>
               Creating meaningful digital experiences through
               thoughtful design, modern technology and creativity.
             </p>
           </div>
+
         </div>
 
         <div class="footer-column">
@@ -309,16 +458,25 @@
       </div>
 
       <div class="footer-bottom">
-        <span>© <span data-year></span> Tatva Webs. All rights reserved.</span>
+
+        <span>
+          © <span data-year></span> Tatva Webs. All rights reserved.
+        </span>
+
         <span>DESIGNED WITH INTENT. BUILT WITH PURPOSE.</span>
+
       </div>
 
     </div>
+
   </footer>
 
-  <div class="cursor-dot"></div>
-  <div class="cursor-ring"></div>
+
+  <!-- CUSTOM CURSOR -->
+  <div class="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"></div>
 
   <script src="script.js"></script>
+
 </body>
 </html>
