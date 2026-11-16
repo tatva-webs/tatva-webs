@@ -1,5 +1,7 @@
+
 /* =========================================
    TATVA WEBS — CINEMATIC INTERACTIONS
+   Midnight Cyan Edition
    Original logo: tatva-webs-logo.png
 ========================================= */
 
@@ -12,6 +14,8 @@ const TATVA_CONFIG = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+  "use strict";
+
   const body = document.body;
   const page = body.dataset.page || "home";
 
@@ -19,20 +23,23 @@ document.addEventListener("DOMContentLoaded", () => {
     "(prefers-reduced-motion: reduce)"
   ).matches;
 
-  const finePointer = window.matchMedia("(pointer: fine)").matches;
+  const finePointer = window.matchMedia(
+    "(pointer: fine)"
+  ).matches;
 
   /* =====================================
-     ORIGINAL LOGO — FAVICON
+     FAVICON — ORIGINAL LOGO
   ===================================== */
 
   document.querySelectorAll(
     'link[rel="icon"], link[rel="shortcut icon"]'
-  ).forEach(icon => icon.remove());
+  ).forEach(element => element.remove());
 
   const favicon = document.createElement("link");
   favicon.rel = "icon";
   favicon.type = "image/png";
   favicon.href = TATVA_CONFIG.logo;
+
   document.head.appendChild(favicon);
 
   /* =====================================
@@ -58,13 +65,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =====================================
-     ORIGINAL LOGO — PRELOADER
+     PRELOADER
   ===================================== */
 
   let preloader = document.querySelector(".site-preloader");
 
   if (!preloader) {
     preloader = document.createElement("div");
+
     preloader.className = "site-preloader";
 
     preloader.innerHTML = `
@@ -94,11 +102,12 @@ document.addEventListener("DOMContentLoaded", () => {
     body.prepend(preloader);
   }
 
-  const hidePreloader = () => {
-    if (!preloader || preloader.classList.contains("is-hidden")) {
-      return;
-    }
+  let preloaderHidden = false;
 
+  const hidePreloader = () => {
+    if (preloaderHidden || !preloader) return;
+
+    preloaderHidden = true;
     preloader.classList.add("is-hidden");
 
     window.setTimeout(() => {
@@ -106,14 +115,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1000);
   };
 
-  window.addEventListener("load", () => {
+  if (document.readyState === "complete") {
     window.setTimeout(
       hidePreloader,
-      reduceMotion ? 0 : 650
+      reduceMotion ? 0 : 400
     );
-  }, { once: true });
+  } else {
+    window.addEventListener("load", () => {
+      window.setTimeout(
+        hidePreloader,
+        reduceMotion ? 0 : 500
+      );
+    }, { once: true });
+  }
 
-  // Safety fallback — never leave the screen covered.
+  // Never allow the loader to cover the website indefinitely.
   window.setTimeout(hidePreloader, 4500);
 
   /* =====================================
@@ -128,16 +144,21 @@ document.addEventListener("DOMContentLoaded", () => {
      ACTIVE NAVIGATION
   ===================================== */
 
+  const normalisePage = value => {
+    return value
+      .replace(/\/$/, "")
+      .split("/")
+      .pop()
+      .replace(/\.html$/, "")
+      .replace(/^index$/, "home")
+      .toLowerCase();
+  };
+
   document.querySelectorAll(".main-nav a").forEach(link => {
     const href = link.getAttribute("href") || "";
-    const target = href.split("/").pop().replace(".html", "");
+    const target = normalisePage(href);
 
-    if (
-      target === page ||
-      (page === "home" && (
-        href === "/" || href.includes("index")
-      ))
-    ) {
+    if (target === page.toLowerCase()) {
       link.classList.add("active");
       link.setAttribute("aria-current", "page");
     }
@@ -163,8 +184,9 @@ document.addEventListener("DOMContentLoaded", () => {
     menuToggle.setAttribute("aria-expanded", "false");
 
     menuToggle.addEventListener("click", () => {
-      const isOpen = mainNav.classList.toggle("open");
+      const isOpen = !mainNav.classList.contains("open");
 
+      mainNav.classList.toggle("open", isOpen);
       menuToggle.classList.toggle("active", isOpen);
 
       menuToggle.setAttribute(
@@ -191,7 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     window.addEventListener("resize", () => {
-      if (window.innerWidth > 700) closeMenu();
+      if (window.innerWidth > 850) closeMenu();
     });
   }
 
@@ -209,7 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
       window.innerHeight;
 
     const progress = scrollable > 0
-      ? scrollTop / scrollable
+      ? Math.min(scrollTop / scrollable, 1)
       : 0;
 
     body.style.setProperty(
@@ -225,10 +247,10 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   window.addEventListener("scroll", () => {
-    if (!scrollTicking) {
-      requestAnimationFrame(updateScrollEffects);
-      scrollTicking = true;
-    }
+    if (scrollTicking) return;
+
+    scrollTicking = true;
+    requestAnimationFrame(updateScrollEffects);
   }, { passive: true });
 
   updateScrollEffects();
@@ -274,10 +296,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const revealObserver = new IntersectionObserver(
       (entries, observer) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
+          if (!entry.isIntersecting) return;
+
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
         });
       },
       {
@@ -292,14 +314,31 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =====================================
-     ADVANCED CUSTOM CURSOR — LOCKED
-     Dot and ring share exact coordinates.
+     ADVANCED CUSTOM CURSOR
+     Dot and ring use identical coordinates.
   ===================================== */
 
-  const cursorDot = document.querySelector(".cursor-dot");
-  const cursorRing = document.querySelector(".cursor-ring");
+  let cursorDot = document.querySelector(".cursor-dot");
+  let cursorRing = document.querySelector(".cursor-ring");
 
-  if (finePointer && !reduceMotion && cursorDot && cursorRing) {
+  if (finePointer && !reduceMotion) {
+
+    // Create cursor elements if missing.
+    if (!cursorDot) {
+      cursorDot = document.createElement("div");
+      cursorDot.className = "cursor-dot";
+      body.appendChild(cursorDot);
+    }
+
+    if (!cursorRing) {
+      cursorRing = document.createElement("div");
+      cursorRing.className = "cursor-ring";
+      body.appendChild(cursorRing);
+    }
+
+    cursorDot.setAttribute("aria-hidden", "true");
+    cursorRing.setAttribute("aria-hidden", "true");
+
     body.classList.add("custom-cursor");
 
     const moveCursor = (x, y) => {
@@ -327,7 +366,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener("pointerover", event => {
       const target = event.target.closest(
-        "a,button,input,textarea,select,summary,[data-cursor-hover]"
+        "a, button, input, textarea, select, summary, [data-cursor-hover]"
       );
 
       cursorRing.classList.toggle(
@@ -358,6 +397,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* =====================================
      MAGNETIC BUTTONS
+     Uses individual translate property
+     to preserve existing CSS transforms.
   ===================================== */
 
   if (finePointer && !reduceMotion) {
@@ -374,12 +415,12 @@ document.addEventListener("DOMContentLoaded", () => {
           const y =
             event.clientY - rect.top - rect.height / 2;
 
-          element.style.transform =
-            `translate3d(${x * 0.12}px, ${y * 0.16}px, 0)`;
+          element.style.translate =
+            `${x * 0.12}px ${y * 0.16}px`;
         });
 
         element.addEventListener("pointerleave", () => {
-          element.style.transform = "";
+          element.style.translate = "";
         });
       });
   }
@@ -393,6 +434,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       card.addEventListener("pointermove", event => {
         const rect = card.getBoundingClientRect();
+
+        if (!rect.width || !rect.height) return;
 
         const x = (event.clientX - rect.left) / rect.width;
         const y = (event.clientY - rect.top) / rect.height;
@@ -411,20 +454,23 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =====================================
-     HERO PARALLAX
+     HERO 3D PARALLAX
+     Does not overwrite the sphere's
+     original CSS transform.
   ===================================== */
 
   const heroScene = document.querySelector(
     "[data-hero-scene]"
   );
 
-  if (
-    heroScene &&
-    finePointer &&
-    !reduceMotion
-  ) {
+  if (heroScene && finePointer && !reduceMotion) {
+    const sphere = heroScene.querySelector(".core-sphere");
+    const orbit = heroScene.querySelector(".hero-orbit");
+
     heroScene.addEventListener("pointermove", event => {
       const rect = heroScene.getBoundingClientRect();
+
+      if (!rect.width || !rect.height) return;
 
       const x =
         (event.clientX - rect.left) / rect.width - 0.5;
@@ -432,33 +478,20 @@ document.addEventListener("DOMContentLoaded", () => {
       const y =
         (event.clientY - rect.top) / rect.height - 0.5;
 
-      const sphere = heroScene.querySelector(".core-sphere");
-      const orbit = heroScene.querySelector(".hero-orbit");
-
       if (sphere) {
-        sphere.style.marginLeft = `${x * 12}px`;
-        sphere.style.marginTop = `${y * 12}px`;
+        sphere.style.translate =
+          `${x * 12}px ${y * 12}px`;
       }
 
       if (orbit) {
-        orbit.style.marginLeft = `${-x * 10}px`;
-        orbit.style.marginTop = `${-y * 10}px`;
+        orbit.style.translate =
+          `${-x * 10}px ${-y * 10}px`;
       }
     });
 
     heroScene.addEventListener("pointerleave", () => {
-      const sphere = heroScene.querySelector(".core-sphere");
-      const orbit = heroScene.querySelector(".hero-orbit");
-
-      if (sphere) {
-        sphere.style.marginLeft = "";
-        sphere.style.marginTop = "";
-      }
-
-      if (orbit) {
-        orbit.style.marginLeft = "";
-        orbit.style.marginTop = "";
-      }
+      if (sphere) sphere.style.translate = "";
+      if (orbit) orbit.style.translate = "";
     });
   }
 
@@ -473,7 +506,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const group = item.parentElement;
 
       group?.querySelectorAll(".faq-item[open]").forEach(other => {
-        if (other !== item) other.open = false;
+        if (other !== item) {
+          other.open = false;
+        }
       });
     });
   });
@@ -487,31 +522,32 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.querySelectorAll("[data-whatsapp]").forEach(link => {
-    if (TATVA_CONFIG.whatsapp) {
-      link.href = `https://wa.me/${TATVA_CONFIG.whatsapp}`;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-    }
+    if (!TATVA_CONFIG.whatsapp) return;
+
+    link.href = `https://wa.me/${TATVA_CONFIG.whatsapp}`;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
   });
 
   document.querySelectorAll("[data-instagram]").forEach(link => {
-    if (TATVA_CONFIG.instagram) {
-      link.href = TATVA_CONFIG.instagram;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-    }
+    if (!TATVA_CONFIG.instagram) return;
+
+    link.href = TATVA_CONFIG.instagram;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
   });
 
   document.querySelectorAll("[data-linkedin]").forEach(link => {
-    if (TATVA_CONFIG.linkedin) {
-      link.href = TATVA_CONFIG.linkedin;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-    }
+    if (!TATVA_CONFIG.linkedin) return;
+
+    link.href = TATVA_CONFIG.linkedin;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
   });
 
   /* =====================================
      CONTACT FORM
+     Opens the visitor's email application.
   ===================================== */
 
   const contactForm = document.querySelector("#contact-form");
@@ -589,13 +625,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const imageObserver = new IntersectionObserver(
       (entries, observer) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("image-visible");
-            observer.unobserve(entry.target);
-          }
+          if (!entry.isIntersecting) return;
+
+          entry.target.classList.add("image-visible");
+          observer.unobserve(entry.target);
         });
       },
-      { threshold: 0.15 }
+      {
+        threshold: 0.15
+      }
     );
 
     images.forEach(image => {
