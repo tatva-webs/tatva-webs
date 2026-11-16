@@ -1,4 +1,3 @@
-
 /* =========================================
    TATVA WEBS — CINEMATIC INTERACTIONS
    Original logo: tatva-webs-logo.png
@@ -15,26 +14,48 @@ const TATVA_CONFIG = {
 document.addEventListener("DOMContentLoaded", () => {
   const body = document.body;
   const page = body.dataset.page || "home";
+
   const reduceMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
   ).matches;
+
   const finePointer = window.matchMedia("(pointer: fine)").matches;
 
   /* =====================================
      ORIGINAL LOGO — FAVICON
   ===================================== */
 
-  const oldFavicons = document.querySelectorAll(
+  document.querySelectorAll(
     'link[rel="icon"], link[rel="shortcut icon"]'
-  );
-
-  oldFavicons.forEach((icon) => icon.remove());
+  ).forEach(icon => icon.remove());
 
   const favicon = document.createElement("link");
   favicon.rel = "icon";
   favicon.type = "image/png";
   favicon.href = TATVA_CONFIG.logo;
   document.head.appendChild(favicon);
+
+  /* =====================================
+     AMBIENT 3D ENVIRONMENT
+  ===================================== */
+
+  if (!document.querySelector(".ambient-3d")) {
+    const ambient = document.createElement("div");
+
+    ambient.className = "ambient-3d";
+    ambient.setAttribute("aria-hidden", "true");
+
+    ambient.innerHTML = `
+      <span class="ambient-object sphere one"></span>
+      <span class="ambient-object orb-small two"></span>
+      <span class="ambient-object ring three"></span>
+      <span class="ambient-object cube four"></span>
+      <span class="ambient-object orb-small five"></span>
+      <span class="ambient-object sphere six"></span>
+    `;
+
+    body.prepend(ambient);
+  }
 
   /* =====================================
      ORIGINAL LOGO — PRELOADER
@@ -48,6 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     preloader.innerHTML = `
       <div class="preloader-inner">
+
         <img
           class="preloader-logo"
           src="${TATVA_CONFIG.logo}"
@@ -65,6 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="preloader-caption">
           Crafting digital experiences
         </div>
+
       </div>
     `;
 
@@ -83,25 +106,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1000);
   };
 
-  window.addEventListener(
-    "load",
-    () => {
-      window.setTimeout(
-        hidePreloader,
-        reduceMotion ? 0 : 650
-      );
-    },
-    { once: true }
-  );
+  window.addEventListener("load", () => {
+    window.setTimeout(
+      hidePreloader,
+      reduceMotion ? 0 : 650
+    );
+  }, { once: true });
 
-  // Safety fallback: never leave the screen covered.
+  // Safety fallback — never leave the screen covered.
   window.setTimeout(hidePreloader, 4500);
 
   /* =====================================
      CURRENT YEAR
   ===================================== */
 
-  document.querySelectorAll("[data-year]").forEach((element) => {
+  document.querySelectorAll("[data-year]").forEach(element => {
     element.textContent = new Date().getFullYear();
   });
 
@@ -109,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
      ACTIVE NAVIGATION
   ===================================== */
 
-  document.querySelectorAll(".main-nav a").forEach((link) => {
+  document.querySelectorAll(".main-nav a").forEach(link => {
     const href = link.getAttribute("href") || "";
     const target = href.split("/").pop().replace(".html", "");
 
@@ -136,6 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     menuToggle.classList.remove("active");
     mainNav.classList.remove("open");
+
     menuToggle.setAttribute("aria-expanded", "false");
   };
 
@@ -146,17 +166,18 @@ document.addEventListener("DOMContentLoaded", () => {
       const isOpen = mainNav.classList.toggle("open");
 
       menuToggle.classList.toggle("active", isOpen);
+
       menuToggle.setAttribute(
         "aria-expanded",
         String(isOpen)
       );
     });
 
-    mainNav.querySelectorAll("a").forEach((link) => {
+    mainNav.querySelectorAll("a").forEach(link => {
       link.addEventListener("click", closeMenu);
     });
 
-    document.addEventListener("click", (event) => {
+    document.addEventListener("click", event => {
       if (
         !mainNav.contains(event.target) &&
         !menuToggle.contains(event.target)
@@ -165,7 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    document.addEventListener("keydown", (event) => {
+    document.addEventListener("keydown", event => {
       if (event.key === "Escape") closeMenu();
     });
 
@@ -182,6 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const updateScrollEffects = () => {
     const scrollTop = window.scrollY;
+
     const scrollable =
       document.documentElement.scrollHeight -
       window.innerHeight;
@@ -202,16 +224,12 @@ document.addEventListener("DOMContentLoaded", () => {
     scrollTicking = false;
   };
 
-  window.addEventListener(
-    "scroll",
-    () => {
-      if (!scrollTicking) {
-        requestAnimationFrame(updateScrollEffects);
-        scrollTicking = true;
-      }
-    },
-    { passive: true }
-  );
+  window.addEventListener("scroll", () => {
+    if (!scrollTicking) {
+      requestAnimationFrame(updateScrollEffects);
+      scrollTicking = true;
+    }
+  }, { passive: true });
 
   updateScrollEffects();
 
@@ -223,11 +241,11 @@ document.addEventListener("DOMContentLoaded", () => {
     ".reveal, .reveal-left, .reveal-right, .reveal-scale"
   );
 
-  revealElements.forEach((element) => {
+  revealElements.forEach(element => {
     const parent = element.parentElement;
 
     const siblings = parent
-      ? Array.from(parent.children).filter((child) =>
+      ? Array.from(parent.children).filter(child =>
           child.matches(
             ".reveal, .reveal-left, .reveal-right, .reveal-scale"
           )
@@ -249,13 +267,13 @@ document.addEventListener("DOMContentLoaded", () => {
     reduceMotion ||
     !("IntersectionObserver" in window)
   ) {
-    revealElements.forEach((element) => {
+    revealElements.forEach(element => {
       element.classList.add("is-visible");
     });
   } else {
     const revealObserver = new IntersectionObserver(
       (entries, observer) => {
-        entries.forEach((entry) => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add("is-visible");
             observer.unobserve(entry.target);
@@ -268,36 +286,28 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     );
 
-    revealElements.forEach((element) => {
+    revealElements.forEach(element => {
       revealObserver.observe(element);
     });
   }
 
   /* =====================================
-     ADVANCED CUSTOM CURSOR
-     Dot and ring use the SAME coordinates.
+     ADVANCED CUSTOM CURSOR — LOCKED
+     Dot and ring share exact coordinates.
   ===================================== */
 
   const cursorDot = document.querySelector(".cursor-dot");
   const cursorRing = document.querySelector(".cursor-ring");
 
-  if (
-    finePointer &&
-    !reduceMotion &&
-    cursorDot &&
-    cursorRing
-  ) {
+  if (finePointer && !reduceMotion && cursorDot && cursorRing) {
     body.classList.add("custom-cursor");
 
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-
-    let ringX = mouseX;
-    let ringY = mouseY;
-
-    const setCursorPosition = (element, x, y) => {
-      element.style.transform =
+    const moveCursor = (x, y) => {
+      const position =
         `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+
+      cursorDot.style.transform = position;
+      cursorRing.style.transform = position;
     };
 
     const showCursor = () => {
@@ -310,28 +320,19 @@ document.addEventListener("DOMContentLoaded", () => {
       cursorRing.style.opacity = "0";
     };
 
-    document.addEventListener(
-      "pointermove",
-      (event) => {
-        mouseX = event.clientX;
-        mouseY = event.clientY;
+    document.addEventListener("pointermove", event => {
+      moveCursor(event.clientX, event.clientY);
+      showCursor();
+    }, { passive: true });
 
-        showCursor();
-
-        // Dot follows pointer exactly.
-        setCursorPosition(cursorDot, mouseX, mouseY);
-      },
-      { passive: true }
-    );
-
-    document.addEventListener("pointerover", (event) => {
-      const interactive = event.target.closest(
-        "a, button, input, textarea, select, summary, [data-cursor-hover]"
+    document.addEventListener("pointerover", event => {
+      const target = event.target.closest(
+        "a,button,input,textarea,select,summary,[data-cursor-hover]"
       );
 
       cursorRing.classList.toggle(
         "cursor-hover",
-        Boolean(interactive)
+        Boolean(target)
       );
     });
 
@@ -343,7 +344,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cursorRing.classList.remove("cursor-click");
     });
 
-    document.addEventListener("pointerout", (event) => {
+    document.addEventListener("pointerout", event => {
       if (!event.relatedTarget) hideCursor();
     });
 
@@ -353,18 +354,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) hideCursor();
     });
-
-    // Ring catches up smoothly with the exact dot position.
-    const animateRing = () => {
-      ringX += (mouseX - ringX) * 0.16;
-      ringY += (mouseY - ringY) * 0.16;
-
-      setCursorPosition(cursorRing, ringX, ringY);
-
-      requestAnimationFrame(animateRing);
-    };
-
-    animateRing();
   }
 
   /* =====================================
@@ -374,8 +363,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (finePointer && !reduceMotion) {
     document
       .querySelectorAll(".magnetic, [data-magnetic]")
-      .forEach((element) => {
-        element.addEventListener("pointermove", (event) => {
+      .forEach(element => {
+
+        element.addEventListener("pointermove", event => {
           const rect = element.getBoundingClientRect();
 
           const x =
@@ -399,8 +389,9 @@ document.addEventListener("DOMContentLoaded", () => {
   ===================================== */
 
   if (finePointer && !reduceMotion) {
-    document.querySelectorAll(".tilt-card").forEach((card) => {
-      card.addEventListener("pointermove", (event) => {
+    document.querySelectorAll(".tilt-card").forEach(card => {
+
+      card.addEventListener("pointermove", event => {
         const rect = card.getBoundingClientRect();
 
         const x = (event.clientX - rect.left) / rect.width;
@@ -432,7 +423,7 @@ document.addEventListener("DOMContentLoaded", () => {
     finePointer &&
     !reduceMotion
   ) {
-    heroScene.addEventListener("pointermove", (event) => {
+    heroScene.addEventListener("pointermove", event => {
       const rect = heroScene.getBoundingClientRect();
 
       const x =
@@ -475,17 +466,15 @@ document.addEventListener("DOMContentLoaded", () => {
      FAQ ACCORDION
   ===================================== */
 
-  document.querySelectorAll(".faq-item").forEach((item) => {
+  document.querySelectorAll(".faq-item").forEach(item => {
     item.addEventListener("toggle", () => {
       if (!item.open) return;
 
       const group = item.parentElement;
 
-      group?.querySelectorAll(".faq-item[open]").forEach(
-        (other) => {
-          if (other !== item) other.open = false;
-        }
-      );
+      group?.querySelectorAll(".faq-item[open]").forEach(other => {
+        if (other !== item) other.open = false;
+      });
     });
   });
 
@@ -493,11 +482,11 @@ document.addEventListener("DOMContentLoaded", () => {
      CONTACT LINKS
   ===================================== */
 
-  document.querySelectorAll("[data-email]").forEach((link) => {
+  document.querySelectorAll("[data-email]").forEach(link => {
     link.href = `mailto:${TATVA_CONFIG.email}`;
   });
 
-  document.querySelectorAll("[data-whatsapp]").forEach((link) => {
+  document.querySelectorAll("[data-whatsapp]").forEach(link => {
     if (TATVA_CONFIG.whatsapp) {
       link.href = `https://wa.me/${TATVA_CONFIG.whatsapp}`;
       link.target = "_blank";
@@ -505,7 +494,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  document.querySelectorAll("[data-instagram]").forEach((link) => {
+  document.querySelectorAll("[data-instagram]").forEach(link => {
     if (TATVA_CONFIG.instagram) {
       link.href = TATVA_CONFIG.instagram;
       link.target = "_blank";
@@ -513,7 +502,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  document.querySelectorAll("[data-linkedin]").forEach((link) => {
+  document.querySelectorAll("[data-linkedin]").forEach(link => {
     if (TATVA_CONFIG.linkedin) {
       link.href = TATVA_CONFIG.linkedin;
       link.target = "_blank";
@@ -529,7 +518,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const formNote = document.querySelector("#form-note");
 
   if (contactForm) {
-    contactForm.addEventListener("submit", (event) => {
+    contactForm.addEventListener("submit", event => {
       event.preventDefault();
 
       if (!contactForm.reportValidity()) return;
@@ -576,7 +565,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document
     .querySelectorAll("[data-back-to-top]")
-    .forEach((button) => {
+    .forEach(button => {
       button.addEventListener("click", () => {
         window.scrollTo({
           top: 0,
@@ -599,7 +588,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const imageObserver = new IntersectionObserver(
       (entries, observer) => {
-        entries.forEach((entry) => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add("image-visible");
             observer.unobserve(entry.target);
@@ -609,7 +598,7 @@ document.addEventListener("DOMContentLoaded", () => {
       { threshold: 0.15 }
     );
 
-    images.forEach((image) => {
+    images.forEach(image => {
       imageObserver.observe(image);
     });
   }
@@ -618,14 +607,12 @@ document.addEventListener("DOMContentLoaded", () => {
      REMOVE OLD BROKEN LOADERS
   ===================================== */
 
-  document
-    .querySelectorAll(
-      ".loader, .preloader:not(.site-preloader), #loader, #preloader, .loading-screen"
-    )
-    .forEach((oldLoader) => {
-      oldLoader.style.display = "none";
-      oldLoader.style.pointerEvents = "none";
-    });
+  document.querySelectorAll(
+    ".loader, .preloader:not(.site-preloader), #loader, #preloader, .loading-screen"
+  ).forEach(oldLoader => {
+    oldLoader.style.display = "none";
+    oldLoader.style.pointerEvents = "none";
+  });
 
   /* =====================================
      PAGE READY
