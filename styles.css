@@ -2089,3 +2089,41 @@ select:focus {
     animation: none !important;
   }
 }
+
+/* =========================================
+   TATVA WEBS — PERFORMANCE OPTIMISATION
+========================================= */
+
+/* Reduce expensive rendering */
+.ambient-object {
+  pointer-events: none;
+}
+
+/* Reduce glass blur workload */
+.service-card,
+.feature-card,
+.project-card,
+.hero-panel {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Avoid unnecessary GPU layer allocation */
+.reveal,
+.reveal-left,
+.reveal-right,
+.reveal-scale {
+  will-change: auto;
+}
+
+/* Pause ambient animations when tab is hidden */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
