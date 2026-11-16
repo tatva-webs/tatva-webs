@@ -1971,3 +1971,93 @@ select:focus {
   }
 }
 
+/* =========================================
+   TATVA WEBS — HERO EMERGENCY CORRECTION
+========================================= */
+
+/* RESTORE THE HERO CONTENT */
+.hero-copy {
+  position: relative !important;
+  z-index: 10 !important;
+  display: block !important;
+  visibility: visible !important;
+}
+
+.hero-copy .reveal,
+.hero-copy .reveal.is-visible {
+  opacity: 1 !important;
+  visibility: visible !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+/* RESTORE THE ORIGINAL ARTWORK SCALE */
+.hero-art {
+  position: relative !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 440px !important;
+  opacity: 1 !important;
+  overflow: visible !important;
+  transform: none !important;
+  perspective: 1000px;
+}
+
+/* REMOVE THE EXTRA ORBIT RINGS I ADDED */
+.core-sphere::before,
+.core-sphere::after {
+  content: none !important;
+}
+
+/* RESTORE ORIGINAL ORBIT ANGLES */
+.hero-orbit {
+  animation: tatvaOrbit 12s ease-in-out infinite !important;
+}
+
+.hero-orbit:nth-of-type(2) {
+  animation-delay: -4s !important;
+}
+
+/* RESTORE ORIGINAL CORE ANIMATION */
+.core-sphere {
+  animation: tatvaCore 6s ease-in-out infinite !important;
+}
+
+/* REDUCE AMBIENT DISTRACTIONS */
+.ambient-object {
+  opacity: .22 !important;
+}
+
+.ambient-object.sphere {
+  width: 115px !important;
+  height: 115px !important;
+}
+
+/* TABLET: PUT CONTENT ABOVE THE ART */
+@media (max-width: 850px) {
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  .hero-copy {
+    max-width: 650px;
+  }
+
+  .hero-art {
+    width: 100% !important;
+    min-height: 350px !important;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 650px) {
+  .hero-art {
+    min-height: 300px !important;
+  }
+
+  .ambient-object {
+    opacity: .12 !important;
+  }
+}
+
