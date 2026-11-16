@@ -2175,3 +2175,174 @@ select:focus {
   }
 }
 
+/* =========================================
+   TATVA WEBS — HERO LAYOUT RESTORE
+   Final override: keep this at the bottom
+========================================= */
+
+/* Restore the two-column hero layout */
+.hero {
+  min-height: 720px !important;
+  display: flex !important;
+  align-items: center !important;
+  padding-top: 110px !important;
+  padding-bottom: 70px !important;
+  overflow: hidden;
+}
+
+.hero-grid {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr) !important;
+  align-items: center !important;
+  gap: 35px !important;
+}
+
+/* Force hero text to be visible */
+.hero-copy {
+  position: relative !important;
+  z-index: 20 !important;
+  width: 100% !important;
+  max-width: 620px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.hero-copy .reveal,
+.hero-copy .reveal.is-visible {
+  opacity: 1 !important;
+  visibility: visible !important;
+  filter: none !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+.hero-title {
+  display: block !important;
+  color: #F4FAFF !important;
+  font-size: clamp(52px, 6.2vw, 88px) !important;
+  line-height: 1.02 !important;
+  letter-spacing: -.065em !important;
+}
+
+.hero-title span {
+  color: #00D9FF !important;
+}
+
+.hero-description {
+  display: block !important;
+  max-width: 490px !important;
+  color: #A9B9CC !important;
+  line-height: 1.9 !important;
+}
+
+.hero-actions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+}
+
+/* Rebuild hero artwork proportions */
+.hero-art {
+  position: relative !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 450px !important;
+  display: grid !important;
+  place-items: center !important;
+  opacity: 1 !important;
+  overflow: visible !important;
+  transform: none !important;
+  perspective: 1000px !important;
+}
+
+/* Bring the core back to the center */
+.hero-core {
+  position: relative !important;
+  z-index: 2 !important;
+  width: clamp(210px, 26vw, 290px) !important;
+  aspect-ratio: 1 !important;
+  display: grid !important;
+  place-items: center !important;
+}
+
+.core-sphere {
+  width: 75% !important;
+  height: auto !important;
+  aspect-ratio: 1 !important;
+  border-radius: 50% !important;
+}
+
+/* Make orbits less flat */
+.hero-orbit {
+  width: min(82%, 390px) !important;
+  aspect-ratio: 1 !important;
+  transform: rotateX(38deg) rotateZ(-20deg) !important;
+}
+
+.hero-orbit:nth-of-type(2) {
+  width: min(68%, 320px) !important;
+  transform: rotateX(48deg) rotateZ(25deg) !important;
+}
+
+/* Keep information panels inside the art */
+.hero-interface {
+  right: -2% !important;
+  bottom: 8% !important;
+  z-index: 5 !important;
+}
+
+.hero-chip {
+  left: 0 !important;
+  top: 10% !important;
+  z-index: 5 !important;
+}
+
+/* Reduce background clutter */
+.ambient-object {
+  opacity: .12 !important;
+}
+
+/* Tablet and mobile */
+@media (max-width: 850px) {
+  .hero {
+    min-height: auto !important;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .hero-art {
+    min-height: 390px !important;
+  }
+}
+
+@media (max-width: 650px) {
+  .hero {
+    padding-top: 115px !important;
+  }
+
+  .hero-title {
+    font-size: clamp(48px, 13vw, 72px) !important;
+  }
+
+  .hero-art {
+    min-height: 320px !important;
+  }
+
+  .hero-core {
+    width: 215px !important;
+  }
+
+  .hero-interface {
+    right: 0 !important;
+    bottom: 3% !important;
+  }
+
+  .hero-chip {
+    left: 0 !important;
+    top: 3% !important;
+  }
+}
+
