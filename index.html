@@ -4,23 +4,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080808">
+  <meta name="theme-color" content="#070B18">
   <meta name="description" content="Tatva Webs creates premium websites and digital experiences for ambitious brands.">
+  <meta name="author" content="Tatva Webs">
+
   <title>Tatva Webs | Digital Experiences That Matter</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="icon" type="image/png" href="tatva-webs-logo.png">
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body data-page="home">
 
+  <!-- AMBIENT BACKGROUND -->
+  <div class="ambient-3d" aria-hidden="true">
+    <span class="ambient-object sphere one"></span>
+    <span class="ambient-object orb-small two"></span>
+    <span class="ambient-object ring three"></span>
+    <span class="ambient-object cube four"></span>
+    <span class="ambient-object orb-small five"></span>
+    <span class="ambient-object sphere six"></span>
+  </div>
+
   <!-- HEADER -->
   <header class="site-header">
     <div class="header-inner">
 
-      <a href="index.html" class="brand">
-        <span class="brand-text">TATVA<span>WEBS.</span></span>
+      <a href="index.html" class="brand" aria-label="Tatva Webs Home">
+        <img
+          src="tatva-webs-logo.png"
+          alt="Tatva Webs"
+          class="brand-logo"
+        >
       </a>
 
-      <nav class="main-nav">
+      <nav class="main-nav" aria-label="Main navigation">
         <a href="index.html" class="active">Home</a>
         <a href="about.html">About</a>
         <a href="services.html">Services</a>
@@ -35,7 +56,13 @@
         Let's Talk <span>↗</span>
       </a>
 
-      <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-label="Toggle navigation"
+        aria-expanded="false"
+        aria-controls="main-navigation"
+      >
         <span></span>
         <span></span>
       </button>
@@ -45,7 +72,9 @@
 
   <main>
 
-    <!-- HERO -->
+    <!-- =================================
+         HERO
+    ================================== -->
     <section class="hero section-shell" data-hero-scene>
 
       <div class="hero-grid">
@@ -53,6 +82,7 @@
         <div class="hero-copy">
 
           <div class="eyebrow reveal">
+            <span class="status-dot"></span>
             Independent Digital Studio
           </div>
 
@@ -69,6 +99,7 @@
           </p>
 
           <div class="hero-actions reveal">
+
             <a href="contact.html" class="button magnetic">
               Start a Project <span>↗</span>
             </a>
@@ -76,24 +107,32 @@
             <a href="work.html" class="button button-outline magnetic">
               Explore Our Work
             </a>
+
           </div>
 
-          <p class="eyebrow reveal" style="margin-top:35px">
-            Design · Development · Digital Growth
+          <p class="eyebrow hero-footnote reveal">
+            DESIGN <span>·</span> DEVELOPMENT <span>·</span> DIGITAL GROWTH
           </p>
 
         </div>
 
-        <!-- HERO ART -->
-        <div class="hero-art">
+        <!-- HERO 3D OBJECT -->
+        <div class="hero-art" aria-label="Abstract three-dimensional cyan digital sphere">
 
           <div class="hero-scene-glow"></div>
 
-          <div class="hero-orbit"></div>
-          <div class="hero-orbit"></div>
+          <div class="hero-orbit orbit-one"></div>
+          <div class="hero-orbit orbit-two"></div>
+          <div class="hero-orbit orbit-three"></div>
 
           <div class="hero-core">
-            <div class="core-sphere"></div>
+            <div class="core-sphere">
+
+              <div class="sphere-highlight"></div>
+              <div class="sphere-surface"></div>
+              <div class="sphere-shine"></div>
+
+            </div>
           </div>
 
           <div class="hero-panel hero-interface">
@@ -106,16 +145,32 @@
             <span>✦ BUILT DIFFERENT</span>
           </div>
 
-          <div class="hero-spark" style="top:20%;left:20%"></div>
-          <div class="hero-spark" style="bottom:25%;right:15%"></div>
-          <div class="hero-spark" style="top:65%;left:12%"></div>
+          <div class="hero-spark spark-one"></div>
+          <div class="hero-spark spark-two"></div>
+          <div class="hero-spark spark-three"></div>
+          <div class="hero-spark spark-four"></div>
+
+          <div class="hero-coordinate">
+            <span>TW / 001</span>
+            <span>CREATIVE DIMENSION</span>
+          </div>
 
         </div>
 
       </div>
+
+      <div class="hero-bottom-line">
+        <span>SCROLL TO EXPLORE</span>
+        <span class="scroll-line"></span>
+        <span>EST. FOR THE DIGITAL WORLD</span>
+      </div>
+
     </section>
 
-    <!-- INTRODUCTION -->
+
+    <!-- =================================
+         INTRODUCTION
+    ================================== -->
     <section class="section-shell section-pad">
 
       <div class="intro-grid">
@@ -132,6 +187,7 @@
         </div>
 
         <div class="intro-copy reveal">
+
           <p>
             Tatva Webs is a creative digital studio focused on building
             meaningful online experiences. We combine thoughtful design,
@@ -139,15 +195,16 @@
             establish a strong digital presence.
           </p>
 
-          <p style="margin-top:20px">
+          <p class="intro-second">
             From the first idea to the final launch, we focus on creating
             websites that look exceptional, feel intuitive and communicate
             your brand with clarity.
           </p>
 
-          <a href="about.html" class="button button-outline magnetic" style="margin-top:28px">
+          <a href="about.html" class="button button-outline magnetic intro-button">
             Discover Tatva Webs ↗
           </a>
+
         </div>
 
       </div>
@@ -173,10 +230,14 @@
 
     </section>
 
-    <!-- SERVICES -->
+
+    <!-- =================================
+         SERVICES
+    ================================== -->
     <section class="section-shell section-pad">
 
       <div class="section-heading">
+
         <div class="eyebrow reveal">02 / WHAT WE DO</div>
 
         <h2 class="reveal">
@@ -188,67 +249,80 @@
           A complete digital toolkit to help your business look better,
           connect with people and grow online.
         </p>
+
       </div>
 
       <div class="service-grid">
 
         <article class="service-card glass tilt-card reveal">
           <div class="card-icon">✦</div>
+          <span class="card-index">01 / DESIGN</span>
           <h3>Website Design</h3>
           <p>
             Modern, visually engaging website designs built around
             your brand identity and audience.
           </p>
+          <a href="services.html" class="card-link">Explore service ↗</a>
         </article>
 
         <article class="service-card glass tilt-card reveal">
           <div class="card-icon">⌘</div>
+          <span class="card-index">02 / BUILD</span>
           <h3>Web Development</h3>
           <p>
             Responsive, functional and performance-conscious
             websites built for real-world use.
           </p>
+          <a href="services.html" class="card-link">Explore service ↗</a>
         </article>
 
         <article class="service-card glass tilt-card reveal">
           <div class="card-icon">◈</div>
+          <span class="card-index">03 / IDENTITY</span>
           <h3>Brand Identity</h3>
           <p>
             A consistent visual language that makes your business
             recognizable and memorable.
           </p>
+          <a href="services.html" class="card-link">Explore service ↗</a>
         </article>
 
         <article class="service-card glass tilt-card reveal">
           <div class="card-icon">◎</div>
+          <span class="card-index">04 / CONVERSION</span>
           <h3>Landing Pages</h3>
           <p>
             Focused pages designed to communicate your offer
             and guide visitors towards action.
           </p>
+          <a href="services.html" class="card-link">Explore service ↗</a>
         </article>
 
         <article class="service-card glass tilt-card reveal">
           <div class="card-icon">↗</div>
+          <span class="card-index">05 / REIMAGINE</span>
           <h3>Website Redesign</h3>
           <p>
             Give your existing website a fresh visual identity,
             better structure and modern experience.
           </p>
+          <a href="services.html" class="card-link">Explore service ↗</a>
         </article>
 
         <article class="service-card glass tilt-card reveal">
           <div class="card-icon">✧</div>
+          <span class="card-index">06 / EXPERIENCE</span>
           <h3>Creative Experiences</h3>
           <p>
             Unique interactions, animations and visual details
             that make your digital presence memorable.
           </p>
+          <a href="services.html" class="card-link">Explore service ↗</a>
         </article>
 
       </div>
 
-      <div style="margin-top:35px">
+      <div class="section-action reveal">
         <a href="services.html" class="button button-outline magnetic">
           View All Services ↗
         </a>
@@ -256,7 +330,10 @@
 
     </section>
 
-    <!-- FEATURE BAND -->
+
+    <!-- =================================
+         FEATURE BAND
+    ================================== -->
     <section class="feature-band">
 
       <div class="section-shell feature-band-inner">
@@ -266,7 +343,9 @@
 
           <h2 class="reveal">
             Good design gets attention.
-            <span class="text-gradient">Great experiences create impact.</span>
+            <span class="text-gradient">
+              Great experiences create impact.
+            </span>
           </h2>
         </div>
 
@@ -278,10 +357,14 @@
 
     </section>
 
-    <!-- SELECTED WORK -->
+
+    <!-- =================================
+         SELECTED WORK
+    ================================== -->
     <section class="section-shell section-pad">
 
       <div class="section-heading">
+
         <div class="eyebrow reveal">03 / SELECTED WORK</div>
 
         <h2 class="reveal">
@@ -293,43 +376,56 @@
           Every project is an opportunity to create something
           distinctive, useful and visually powerful.
         </p>
+
       </div>
 
       <div class="project-grid">
 
         <article class="project-card reveal">
+
           <div class="project-visual mock-store">
-            <div style="text-align:center;padding:25px">
-              <div class="eyebrow">E-COMMERCE EXPERIENCE</div>
-              <h2 style="font-size:42px">NOVA.</h2>
-              <p style="color:#aaa">A modern shopping concept</p>
+            <div class="project-mock-content">
+              <span class="eyebrow">E-COMMERCE EXPERIENCE</span>
+              <h2>NOVA.</h2>
+              <p>A modern shopping concept</p>
+              <span class="mock-cta">DISCOVER MORE ↗</span>
             </div>
           </div>
 
           <div class="project-caption">
-            <h3>Modern E-Commerce</h3>
-            <p>Website Design · Development</p>
+            <div>
+              <h3>Modern E-Commerce</h3>
+              <p>Website Design · Development</p>
+            </div>
+            <span class="project-number">01</span>
           </div>
+
         </article>
 
         <article class="project-card reveal">
+
           <div class="project-visual mock-studio">
-            <div style="text-align:center;padding:25px">
-              <div class="eyebrow">CREATIVE BRAND</div>
-              <h2 style="font-size:42px">STUDIO.</h2>
-              <p style="color:#aaa">Creative digital identity</p>
+            <div class="project-mock-content">
+              <span class="eyebrow">CREATIVE BRAND</span>
+              <h2>STUDIO.</h2>
+              <p>Creative digital identity</p>
+              <span class="mock-cta">EXPLORE THE VISION ↗</span>
             </div>
           </div>
 
           <div class="project-caption">
-            <h3>Creative Studio Website</h3>
-            <p>Branding · Website Experience</p>
+            <div>
+              <h3>Creative Studio Website</h3>
+              <p>Branding · Website Experience</p>
+            </div>
+            <span class="project-number">02</span>
           </div>
+
         </article>
 
       </div>
 
-      <div style="margin-top:35px">
+      <div class="section-action reveal">
         <a href="work.html" class="button button-outline magnetic">
           Explore Our Work ↗
         </a>
@@ -337,16 +433,21 @@
 
     </section>
 
-    <!-- WHY TATVA -->
+
+    <!-- =================================
+         WHY TATVA
+    ================================== -->
     <section class="section-shell section-pad">
 
       <div class="section-heading">
+
         <div class="eyebrow reveal">04 / WHY TATVA WEBS</div>
 
         <h2 class="reveal">
           Built with purpose.
           <span class="text-gradient">Designed with intent.</span>
         </h2>
+
       </div>
 
       <div class="feature-grid">
@@ -382,8 +483,13 @@
 
     </section>
 
-    <!-- CTA -->
+
+    <!-- =================================
+         FINAL CTA
+    ================================== -->
     <section class="cta-section section-shell">
+
+      <div class="cta-orb" aria-hidden="true"></div>
 
       <div class="eyebrow reveal">LET'S CREATE SOMETHING</div>
 
@@ -405,7 +511,10 @@
 
   </main>
 
-  <!-- FOOTER -->
+
+  <!-- =================================
+       FOOTER
+  ================================== -->
   <footer class="site-footer">
 
     <div class="section-shell">
@@ -413,9 +522,14 @@
       <div class="footer-top">
 
         <div class="footer-brand">
+
           <div>
-            <a href="index.html" class="brand">
-              <span class="brand-text">TATVA<span>WEBS.</span></span>
+            <a href="index.html" class="brand" aria-label="Tatva Webs Home">
+              <img
+                src="tatva-webs-logo.png"
+                alt="Tatva Webs"
+                class="brand-logo"
+              >
             </a>
 
             <p>
@@ -423,6 +537,7 @@
               thoughtful design, modern technology and creativity.
             </p>
           </div>
+
         </div>
 
         <div class="footer-column">
@@ -444,18 +559,26 @@
       </div>
 
       <div class="footer-bottom">
-        <span>© <span data-year></span> Tatva Webs. All rights reserved.</span>
+
+        <span>
+          © <span data-year></span> Tatva Webs. All rights reserved.
+        </span>
+
         <span>DESIGNED WITH INTENT. BUILT WITH PURPOSE.</span>
+
       </div>
 
     </div>
 
   </footer>
 
-  <!-- ADVANCED CURSOR -->
-  <div class="cursor-dot"></div>
-  <div class="cursor-ring"></div>
 
+  <!-- CUSTOM CURSOR -->
+  <div class="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"></div>
+
+
+  <!-- JAVASCRIPT -->
   <script src="script.js"></script>
 
 </body>
