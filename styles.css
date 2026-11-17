@@ -2294,4 +2294,477 @@ main {
   }
 }
 
+/* =====================================================
+   TATVA WEBS — LAYOUT + RESPONSIVE + CURSOR FIX PACK
+   Append this at the VERY BOTTOM of style.css
+===================================================== */
+
+/* GLOBAL OVERFLOW + SIZING */
+html {
+  width: 100%;
+  overflow-x: clip;
+}
+
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+main,
+section,
+header,
+footer,
+.section-shell,
+.header-inner {
+  min-width: 0;
+}
+
+img,
+video,
+iframe {
+  max-width: 100%;
+}
+
+.info-grid > *,
+.project-grid > *,
+.portfolio-grid > *,
+.pricing-grid > *,
+.service-grid > *,
+.feature-grid > * {
+  min-width: 0;
+}
+
+/* HEADER FIX */
+.site-header {
+  width: 100%;
+  left: 0;
+  right: 0;
+}
+
+.header-inner {
+  min-height: inherit;
+}
+
+.brand {
+  min-width: 0;
+}
+
+.main-nav {
+  min-width: 0;
+}
+
+.main-nav a {
+  flex-shrink: 0;
+}
+
+/* DESKTOP NAV SPACING */
+@media (min-width: 851px) {
+  .header-inner {
+    gap: 18px;
+  }
+
+  .main-nav {
+    flex: 1;
+    gap: clamp(10px, 1.25vw, 19px);
+  }
+
+  .main-nav a {
+    font-size: clamp(9px, .78vw, 11px);
+  }
+
+  .header-cta {
+    flex-shrink: 0;
+  }
+}
+
+/* HERO ALIGNMENT */
+.hero-grid {
+  width: var(--shell);
+  max-width: 1240px;
+  margin-inline: auto;
+}
+
+.hero-copy,
+.hero-content {
+  min-width: 0;
+}
+
+.hero-art {
+  min-width: 0;
+}
+
+.hero-title {
+  overflow-wrap: anywhere;
+}
+
+.hero-description {
+  max-width: 490px;
+}
+
+/* PREVENT 3D ART FROM CAUSING PAGE OVERFLOW */
+.hero,
+.hero-section {
+  overflow: clip;
+}
+
+.hero-art {
+  max-width: 100%;
+}
+
+.hero-panel {
+  max-width: min(220px, 48%);
+}
+
+.hero-interface {
+  right: 2%;
+}
+
+/* SECTION WIDTH FIX */
+.section-shell {
+  width: var(--shell);
+  max-width: 1240px;
+}
+
+.section-pad {
+  padding-inline: 0;
+}
+
+.content-split,
+.intro-grid,
+.contact-layout,
+.contact-bottom {
+  min-width: 0;
+}
+
+.content-split > *,
+.intro-grid > *,
+.contact-layout > *,
+.contact-bottom > * {
+  min-width: 0;
+}
+
+/* CARD GRID FIX */
+.info-grid,
+.project-grid,
+.portfolio-grid,
+.pricing-grid,
+.service-grid,
+.feature-grid {
+  width: 100%;
+  align-items: stretch;
+}
+
+.info-card,
+.project-card,
+.pricing-card,
+.service-card,
+.feature-card {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* PROJECT MEDIA FIX */
+.project-visual {
+  width: 100%;
+  min-width: 0;
+}
+
+.project-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* CONTACT FORM FIX */
+.contact-layout {
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+}
+
+.contact-form-wrap {
+  min-width: 0;
+}
+
+#contact-form,
+.form-row,
+.form-field {
+  min-width: 0;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  max-width: 100%;
+}
+
+/* FOOTER FIX */
+.footer-top > * {
+  min-width: 0;
+}
+
+.footer-column a {
+  overflow-wrap: anywhere;
+}
+
+/* =====================================================
+   CUSTOM CURSOR — ALIGNMENT FIX
+===================================================== */
+
+/* Keep native cursor until custom cursor is visible */
+@media (pointer: fine) {
+  body.custom-cursor,
+  body.custom-cursor a,
+  body.custom-cursor button,
+  body.custom-cursor input,
+  body.custom-cursor textarea,
+  body.custom-cursor select,
+  body.custom-cursor summary {
+    cursor: auto !important;
+  }
+
+  body.custom-cursor.cursor-ready,
+  body.custom-cursor.cursor-ready a,
+  body.custom-cursor.cursor-ready button,
+  body.custom-cursor.cursor-ready input,
+  body.custom-cursor.cursor-ready textarea,
+  body.custom-cursor.cursor-ready select,
+  body.custom-cursor.cursor-ready summary {
+    cursor: none !important;
+  }
+
+  .cursor-dot,
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100000;
+    display: block;
+    pointer-events: none;
+    border-radius: 50%;
+    opacity: 0;
+    visibility: hidden;
+    will-change: transform;
+  }
+
+  .cursor-dot {
+    width: 6px;
+    height: 6px;
+    background: #8CEBFF;
+    box-shadow: 0 0 12px rgba(0,217,255,.95);
+  }
+
+  .cursor-ring {
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(0,217,255,.8);
+    background: rgba(0,217,255,.035);
+    box-shadow: 0 0 18px rgba(0,217,255,.12);
+    transition:
+      width .22s ease,
+      height .22s ease,
+      border-color .22s ease,
+      background .22s ease,
+      opacity .15s ease,
+      visibility .15s ease;
+  }
+
+  body.cursor-ready .cursor-dot,
+  body.cursor-ready .cursor-ring {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .cursor-ring.cursor-hover {
+    width: 54px;
+    height: 54px;
+    border-color: #00D9FF;
+    background: rgba(0,217,255,.10);
+    box-shadow: 0 0 25px rgba(0,217,255,.2);
+  }
+
+  .cursor-ring.cursor-click {
+    width: 25px;
+    height: 25px;
+    background: rgba(0,217,255,.2);
+  }
+}
+
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none !important;
+  }
+
+  body.custom-cursor,
+  body.custom-cursor * {
+    cursor: auto !important;
+  }
+}
+
+/* =====================================================
+   TABLET FIX
+===================================================== */
+
+@media (max-width: 1050px) {
+  :root {
+    --shell: calc(100% - 64px);
+  }
+
+  .hero-grid {
+    gap: 20px;
+  }
+
+  .hero-title {
+    font-size: clamp(46px, 6.5vw, 72px);
+  }
+
+  .hero-art {
+    min-height: 390px;
+  }
+}
+
+@media (max-width: 850px) {
+  .header-inner {
+    gap: 15px;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hero-art {
+    min-height: 340px;
+  }
+
+  .contact-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-bottom {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =====================================================
+   MOBILE FIX
+===================================================== */
+
+@media (max-width: 650px) {
+  :root {
+    --shell: calc(100% - 36px);
+  }
+
+  .site-header {
+    padding-inline: 18px;
+  }
+
+  .header-inner {
+    width: 100%;
+  }
+
+  .main-nav {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-height: calc(100svh - 100px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    z-index: 2000;
+  }
+
+  .hero {
+    padding-top: 80px;
+  }
+
+  .hero-grid {
+    width: var(--shell);
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .hero-copy {
+    width: 100%;
+  }
+
+  .hero-title {
+    font-size: clamp(43px, 12vw, 68px);
+    line-height: 1.02;
+    overflow-wrap: normal;
+  }
+
+  .hero-art {
+    width: 100%;
+    min-height: 310px;
+    margin-top: 10px;
+  }
+
+  .hero-core {
+    width: min(210px, 65vw);
+  }
+
+  .hero-interface {
+    right: 0;
+    bottom: 3%;
+    min-width: 145px;
+  }
+
+  .hero-chip {
+    left: 0;
+  }
+
+  .project-visual {
+    min-height: 250px;
+  }
+
+  .footer-top {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .contact-form-wrap {
+    width: 100%;
+  }
+
+  .form-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* SMALL PHONE FIX */
+@media (max-width: 390px) {
+  :root {
+    --shell: calc(100% - 28px);
+  }
+
+  .hero-title {
+    font-size: 44px;
+  }
+
+  .hero-art {
+    min-height: 275px;
+  }
+
+  .hero-interface {
+    min-width: 125px;
+    padding: 10px;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-brand {
+    grid-column: auto;
+  }
+}
+
+/* REDUCED MOTION */
+@media (prefers-reduced-motion: reduce) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none !important;
+  }
+}
+
 
