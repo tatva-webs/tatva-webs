@@ -1,11 +1,8 @@
-
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
-
 /* =====================================================
    TATVA WEBS — COMPLETE DESIGN SYSTEM
    MIDNIGHT BLUE × ELECTRIC CYAN
 ===================================================== */
-
 :root {
   --bg: #070B18;
   --panel: #0D1526;
@@ -22,19 +19,16 @@
   --shell: min(1240px,calc(100% - 100px));
   --scroll-progress: 0;
 }
-
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
-
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 100px;
   background: var(--bg);
 }
-
 body {
   position: relative;
   min-height: 100vh;
@@ -46,44 +40,35 @@ body {
   font-family: 'Manrope',sans-serif;
   -webkit-font-smoothing: antialiased;
 }
-
 ::selection {
   background: var(--cyan);
   color: #06101B;
 }
-
 a {
   color: inherit;
   text-decoration: none;
 }
-
 img {
   display: block;
   max-width: 100%;
 }
-
 button,input,textarea,select {
   font: inherit;
 }
-
 main,header,footer,section {
   position: relative;
   z-index: 2;
 }
-
 .section-shell {
   width: var(--shell);
   margin-inline: auto;
 }
-
 .section-pad {
   padding-block: clamp(80px,10vw,145px);
 }
-
 /* =====================================================
    AMBIENT 3D BACKGROUND
 ===================================================== */
-
 .ambient-3d {
   position: fixed;
   inset: 0;
@@ -2730,35 +2715,28 @@ iframe {
     grid-template-columns: minmax(0, 1fr);
   }
 }
-
 /* SMALL PHONE FIX */
 @media (max-width: 390px) {
   :root {
     --shell: calc(100% - 28px);
   }
-
   .hero-title {
     font-size: 44px;
   }
-
   .hero-art {
     min-height: 275px;
   }
-
   .hero-interface {
     min-width: 125px;
     padding: 10px;
   }
-
   .footer-top {
     grid-template-columns: 1fr;
   }
-
   .footer-brand {
     grid-column: auto;
   }
 }
-
 /* REDUCED MOTION */
 @media (prefers-reduced-motion: reduce) {
   .cursor-dot,
@@ -2766,5 +2744,3 @@ iframe {
     display: none !important;
   }
 }
-
-
