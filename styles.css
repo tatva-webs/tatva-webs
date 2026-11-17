@@ -1484,3 +1484,131 @@ section {
     transform: none;
   }
 }
+
+/* =========================================
+   JS INTERACTION COMPATIBILITY
+========================================= */
+
+/* Scroll reveal */
+.js-enabled .reveal,
+.js-enabled .reveal-left,
+.js-enabled .reveal-right,
+.js-enabled .reveal-scale {
+  opacity: 0;
+  transition: opacity .8s ease,
+              transform .8s cubic-bezier(.2,.7,.2,1);
+  animation: none;
+}
+
+.js-enabled .reveal {
+  transform: translateY(28px);
+}
+
+.js-enabled .reveal-left {
+  transform: translateX(-35px);
+}
+
+.js-enabled .reveal-right {
+  transform: translateX(35px);
+}
+
+.js-enabled .reveal-scale {
+  transform: scale(.92);
+}
+
+.js-enabled .reveal.is-visible,
+.js-enabled .reveal-left.is-visible,
+.js-enabled .reveal-right.is-visible,
+.js-enabled .reveal-scale.is-visible {
+  opacity: 1;
+  transform: none;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+/* Header scroll state */
+.site-header.scrolled {
+  background: rgba(5, 10, 22, .94);
+  box-shadow: 0 10px 35px rgba(0,0,0,.2);
+}
+
+/* Cursor visibility */
+.custom-cursor,
+.custom-cursor a,
+.custom-cursor button {
+  cursor: none;
+}
+
+.cursor-dot,
+.cursor-ring {
+  opacity: 0;
+}
+
+.cursor-ready .cursor-dot,
+.cursor-ready .cursor-ring {
+  opacity: 1;
+}
+
+.cursor-ring.cursor-hover {
+  width: 48px;
+  height: 48px;
+  border-color: var(--cyan);
+  background: rgba(54,231,245,.08);
+}
+
+.cursor-ring.cursor-click {
+  width: 24px;
+  height: 24px;
+}
+
+/* Magnetic and tilt compatibility */
+.magnetic,
+.tilt-card {
+  will-change: transform;
+}
+
+.tilt-card {
+  transform-style: preserve-3d;
+}
+
+/* Card light reflection */
+.service-card::after,
+.feature-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(54,231,245,.09),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity .3s;
+}
+
+.service-card:hover::after,
+.feature-card:hover::after {
+  opacity: 1;
+}
+
+/* Page transition */
+body.page-leaving {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .3s, transform .3s;
+}
+
+/* Reduced motion */
+.reduce-motion .reveal,
+.reduce-motion .reveal-left,
+.reduce-motion .reveal-right,
+.reduce-motion .reveal-scale {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+/* Scroll progress custom property */
+html {
+  --scroll-progress: 0;
+}
