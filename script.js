@@ -386,140 +386,149 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
+
 /* =====================================================
-   TATVA WEBS — CUSTOM CURSOR FIX
+   TATVA WEBS — OPTIMIZED CUSTOM CURSOR
 ===================================================== */
 
 (() => {
-  const finePointer = window.matchMedia('(pointer: fine)').matches;
+  const finePointer = window.matchMedia("(pointer: fine)").matches;
   const reducedMotion = window.matchMedia(
-    '(prefers-reduced-motion: reduce)'
+    "(prefers-reduced-motion: reduce)"
   ).matches;
 
   if (!finePointer || reducedMotion) return;
 
-  let dot = document.querySelector('.cursor-dot');
-  let ring = document.querySelector('.cursor-ring');
+  const dot = document.querySelector(".cursor-dot");
+  const ring = document.querySelector(".cursor-ring");
 
-  if (!dot) {
-    dot = document.createElement('div');
-    dot.className = 'cursor-dot';
-    dot.setAttribute('aria-hidden', 'true');
-    document.body.appendChild(dot);
-  }
+  if (!dot || !ring) return;
 
-  if (!ring) {
-    ring = document.createElement('div');
-    ring.className = 'cursor-ring';
-    ring.setAttribute('aria-hidden', 'true');
-    document.body.appendChild(ring);
-  }
+  if (document.body.dataset.cursorReady === "true") return;
+  document.body.dataset.cursorReady = "true";
 
-  // Prevent duplicate initialization.
-  if (document.body.dataset.cursorReady === 'true') return;
-  document.body.dataset.cursorReady = 'true';
+  document.body.classList.add("custom-cursor");
 
-  document.body.classList.add('custom-cursor');
+  let mouseX = 0;
+  let mouseY = 0;
+  let ringX = 0;
+  let ringY = 0;
 
-  let mouseX = -100;
-  let mouseY = -100;
-  let ringX = -100;
-  let ringY = -100;
   let visible = false;
   let animationFrame = null;
 
   const hoverSelector =
-    'a, button, input, textarea, select, summary, [data-cursor-hover]';
+    "a, button, input, textarea, select, summary, " +
+    "[role='button'], [data-cursor-hover]";
 
-  function moveCursor(event) {
-    if (event.pointerType === 'touch') return;
+  function positionDot(x, y) {
+    dot.style.transform =
+      `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+  }
 
-    mouseX = event.clientX;
-    mouseY = event.clientY;
+  function positionRing(x, y) {
+    ring.style.transform =
+      `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+  }
+
+  function showCursor(x, y) {
+    mouseX = x;
+    mouseY = y;
 
     if (!visible) {
       visible = true;
-      ringX = mouseX;
-      ringY = mouseY;
+      ringX = x;
+      ringY = y;
 
-      document.body.classList.add('cursor-ready');
+      positionRing(x, y);
+      positionDot(x, y);
+
+      document.body.classList.add("cursor-ready");
     }
-
-    dot.style.transform =
-      `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
-  }
-
-  function animateRing() {
-    ringX += (mouseX - ringX) * 0.32;
-    ringY += (mouseY - ringY) * 0.32;
-
-    ring.style.transform =
-      `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
-
-    animationFrame = requestAnimationFrame(animateRing);
   }
 
   function hideCursor() {
     visible = false;
-    document.body.classList.remove('cursor-ready');
+    document.body.classList.remove("cursor-ready");
+    ring.classList.remove("cursor-hover", "cursor-click");
   }
 
-  function showCursor(event) {
-    if (event.pointerType === 'touch') return;
-
+  function animateRing() {
     if (!visible) {
-      visible = true;
-      mouseX = event.clientX;
-      mouseY = event.clientY;
+      animationFrame = null;
+      return;
+    }
+
+    const dx = mouseX - ringX;
+    const dy = mouseY - ringY;
+
+    ringX += dx * 0.22;
+    ringY += dy * 0.22;
+
+    positionRing(ringX, ringY);
+
+    if (Math.abs(dx) > 0.15 || Math.abs(dy) > 0.15) {
+      animationFrame = requestAnimationFrame(animateRing);
+    } else {
       ringX = mouseX;
       ringY = mouseY;
-
-      dot.style.transform =
-        `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
-
-      ring.style.transform =
-        `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
-
-      document.body.classList.add('cursor-ready');
+      positionRing(ringX, ringY);
+      animationFrame = null;
     }
   }
 
-  document.addEventListener('pointermove', moveCursor, {
+  function moveCursor(event) {
+    if (event.pointerType === "touch") return;
+
+    mouseX = event.clientX;
+    mouseY = event.clientY;
+
+    showCursor(mouseX, mouseY);
+    positionDot(mouseX, mouseY);
+
+    if (animationFrame === null) {
+      animationFrame = requestAnimationFrame(animateRing);
+    }
+
+    const target = event.target instanceof Element
+      ? event.target.closest(hoverSelector)
+      : null;
+
+    ring.classList.toggle("cursor-hover", Boolean(target));
+  }
+
+  document.addEventListener("pointermove", moveCursor, {
     passive: true
   });
 
-  document.addEventListener('pointerover', event => {
-    if (event.pointerType === 'touch') return;
+  document.addEventListener("pointerdown", event => {
+    if (event.pointerType === "touch") return;
 
-    const target = event.target.closest(hoverSelector);
-    ring.classList.toggle('cursor-hover', Boolean(target));
+    ring.classList.add("cursor-click");
   });
 
-  document.addEventListener('pointerdown', event => {
-    if (event.pointerType === 'touch') return;
-    ring.classList.add('cursor-click');
+  document.addEventListener("pointerup", () => {
+    ring.classList.remove("cursor-click");
   });
 
-  document.addEventListener('pointerup', () => {
-    ring.classList.remove('cursor-click');
+  document.addEventListener("pointercancel", () => {
+    ring.classList.remove("cursor-click");
   });
 
-  document.addEventListener('pointerout', event => {
-    if (event.relatedTarget === null) {
+  window.addEventListener("mouseout", event => {
+    if (!event.relatedTarget) {
       hideCursor();
     }
   });
 
-  window.addEventListener('blur', hideCursor);
+  window.addEventListener("blur", hideCursor);
 
-  window.addEventListener('focus', () => {
+  window.addEventListener("focus", () => {
     visible = false;
   });
 
-  if (animationFrame === null) {
-    animationFrame = requestAnimationFrame(animateRing);
-  }
 })();
+
 
 
   /* =========================================
