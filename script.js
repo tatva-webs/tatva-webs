@@ -385,80 +385,142 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  /* =========================================
-     CUSTOM CURSOR
-  ========================================= */
 
-  if (finePointer && !reducedMotion) {
-    const cursorDot = document.createElement("div");
-    const cursorRing = document.createElement("div");
+/* =====================================================
+   TATVA WEBS — CUSTOM CURSOR FIX
+===================================================== */
 
-    cursorDot.className = "cursor-dot";
-    cursorRing.className = "cursor-ring";
+(() => {
+  const finePointer = window.matchMedia('(pointer: fine)').matches;
+  const reducedMotion = window.matchMedia(
+    '(prefers-reduced-motion: reduce)'
+  ).matches;
 
-    document.body.append(cursorDot, cursorRing);
+  if (!finePointer || reducedMotion) return;
 
-    document.body.classList.add("custom-cursor");
+  let dot = document.querySelector('.cursor-dot');
+  let ring = document.querySelector('.cursor-ring');
 
-    let mouseX = -100;
-    let mouseY = -100;
+  if (!dot) {
+    dot = document.createElement('div');
+    dot.className = 'cursor-dot';
+    dot.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(dot);
+  }
 
-    let ringX = -100;
-    let ringY = -100;
+  if (!ring) {
+    ring = document.createElement('div');
+    ring.className = 'cursor-ring';
+    ring.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(ring);
+  }
 
-    let cursorFrame = null;
+  // Prevent duplicate initialization.
+  if (document.body.dataset.cursorReady === 'true') return;
+  document.body.dataset.cursorReady = 'true';
 
-    document.addEventListener("mousemove", event => {
-      mouseX = event.clientX;
-      mouseY = event.clientY;
+  document.body.classList.add('custom-cursor');
 
-      cursorDot.style.transform =
-        `translate3d(${mouseX}px,${mouseY}px,0) translate(-50%,-50%)`;
-    }, { passive: true });
+  let mouseX = -100;
+  let mouseY = -100;
+  let ringX = -100;
+  let ringY = -100;
+  let visible = false;
+  let animationFrame = null;
 
-    function animateCursor() {
-      ringX += (mouseX - ringX) * 0.16;
-      ringY += (mouseY - ringY) * 0.16;
+  const hoverSelector =
+    'a, button, input, textarea, select, summary, [data-cursor-hover]';
 
-      cursorRing.style.transform =
-        `translate3d(${ringX}px,${ringY}px,0) translate(-50%,-50%)`;
+  function moveCursor(event) {
+    if (event.pointerType === 'touch') return;
 
-      cursorFrame = requestAnimationFrame(animateCursor);
+    mouseX = event.clientX;
+    mouseY = event.clientY;
+
+    if (!visible) {
+      visible = true;
+      ringX = mouseX;
+      ringY = mouseY;
+
+      document.body.classList.add('cursor-ready');
     }
 
-    animateCursor();
-
-    const interactiveElements = $$(
-      "a, button, input, textarea, select, summary, " +
-      "[role='button'], .button"
-    );
-
-    interactiveElements.forEach(element => {
-      element.addEventListener("mouseenter", () => {
-        cursorRing.classList.add("cursor-hover");
-      });
-
-      element.addEventListener("mouseleave", () => {
-        cursorRing.classList.remove("cursor-hover");
-      });
-    });
-
-    document.addEventListener("mousedown", () => {
-      cursorRing.classList.add("cursor-click");
-    });
-
-    document.addEventListener("mouseup", () => {
-      cursorRing.classList.remove("cursor-click");
-    });
-
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) {
-        cancelAnimationFrame(cursorFrame);
-      } else {
-        animateCursor();
-      }
-    });
+    dot.style.transform =
+      `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
   }
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.32;
+    ringY += (mouseY - ringY) * 0.32;
+
+    ring.style.transform =
+      `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+
+    animationFrame = requestAnimationFrame(animateRing);
+  }
+
+  function hideCursor() {
+    visible = false;
+    document.body.classList.remove('cursor-ready');
+  }
+
+  function showCursor(event) {
+    if (event.pointerType === 'touch') return;
+
+    if (!visible) {
+      visible = true;
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+      ringX = mouseX;
+      ringY = mouseY;
+
+      dot.style.transform =
+        `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+
+      ring.style.transform =
+        `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+
+      document.body.classList.add('cursor-ready');
+    }
+  }
+
+  document.addEventListener('pointermove', moveCursor, {
+    passive: true
+  });
+
+  document.addEventListener('pointerover', event => {
+    if (event.pointerType === 'touch') return;
+
+    const target = event.target.closest(hoverSelector);
+    ring.classList.toggle('cursor-hover', Boolean(target));
+  });
+
+  document.addEventListener('pointerdown', event => {
+    if (event.pointerType === 'touch') return;
+    ring.classList.add('cursor-click');
+  });
+
+  document.addEventListener('pointerup', () => {
+    ring.classList.remove('cursor-click');
+  });
+
+  document.addEventListener('pointerout', event => {
+    if (event.relatedTarget === null) {
+      hideCursor();
+    }
+  });
+
+  window.addEventListener('blur', hideCursor);
+
+  window.addEventListener('focus', () => {
+    visible = false;
+  });
+
+  if (animationFrame === null) {
+    animationFrame = requestAnimationFrame(animateRing);
+  }
+})();
+
 
   /* =========================================
      MAGNETIC BUTTONS
